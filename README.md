@@ -21,3 +21,6 @@ Easier-to-read stops: bold plain numbers, all one size (Jeff picked B).
 
 ## v1.4 (Nov 3)
 The board opens with no route picked. Tap one stop in every row, then Depart. First-time players are offered the demo.
+
+## v1.13 (Nov 3)
+One way home, same in every daily game: the yellow ‹ smAisle Daily button sits at the top left in the same spot on the cover and in the game, and smAisle Home is one small line next to the version at the bottom of the cover.

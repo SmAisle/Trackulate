@@ -22,7 +22,7 @@ html[data-mode=navy]{--paper:#121b2e;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f
 *{box-sizing:border-box}html,body{height:100%;margin:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 body{background:var(--paper);color:var(--ink);font:500 16px/1.35 var(--sans)}
 button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
-#hubBar{flex:none;align-self:flex-start;font:800 12px var(--sans);color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:2px 8px;text-decoration:none}
+#hubBar,#coverHub{font:800 13px/1.2 var(--sans);letter-spacing:.06em;color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:5px 10px;text-decoration:none;white-space:nowrap}#hubBar{flex:none;align-self:flex-start}#hubBar[hidden],#coverHub[hidden]{display:none}
 #app{max-width:480px;margin:0 auto;height:100%;height:100dvh;display:flex;flex-direction:column;gap:6px;padding-block:calc(env(safe-area-inset-top,0px) + 6px) calc(env(safe-area-inset-bottom,0px) + 10px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:3px double var(--ink);padding-bottom:5px}
 #pno b{display:block;font:900 20px/1 var(--head)}#pno small{font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
@@ -48,7 +48,9 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 .set{display:grid;gap:5px;border-top:1px solid var(--ink);padding-top:8px}.set h3{margin:0;text-align:center;font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}.set small{text-align:center;font-size:11px;color:var(--fade)}
 .seg{display:flex;gap:6px}.seg button{flex:1;padding:9px 4px;border:2px solid var(--ink);border-radius:3px;background:var(--card);font:800 12px var(--sans);text-transform:uppercase}.seg button.sel{background:var(--ink);color:var(--paper)}
 #cover{background:var(--paper);z-index:30}#cover .in{width:100%;max-width:340px;margin:auto;display:grid;gap:12px;text-align:center;justify-items:stretch}
-#coverHub{justify-self:start;font:800 13px var(--sans);color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:6px 10px;text-decoration:none}
+/* The cover's button sits exactly where the in-game one does. */
+#coverHub{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:calc(max(0px,(100vw - 480px)/2) + max(16px,env(safe-area-inset-left,0px)))}#cover.hub{padding-top:calc(env(safe-area-inset-top,0px) + 42px)}
+.ver.smhome{color:var(--ink2)}.smhome a{color:inherit;padding:6px 2px}
 .mh{border-top:3px double var(--ink);border-bottom:3px double var(--ink);padding:8px 0}.mh h1{font:900 clamp(38px,12vw,50px)/1 var(--head);margin:0}.mh div{display:flex;justify-content:space-between;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;color:var(--ink2)}
 .tag{font:italic 400 15px/1.45 var(--body);margin:0}#cvArt{display:block;width:100%;height:120px;border:2px solid var(--ink);border-radius:4px}
 .lk{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font:800 12px var(--sans);letter-spacing:.06em;text-transform:uppercase}.lk button{background:none;border:0;padding:6px 2px;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink);text-decoration:underline}
@@ -97,7 +99,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <div id="cvStats" hidden></div>
   <button class="go" id="coverGo">Play today’s board</button>
   <div class="lk"><button id="coverPast">Archive</button><button id="coverStats">Stats</button><button id="coverHow">How to Play</button><button id="coverDemo">Demo</button></div>
-  <div class="ver" id="cvVer"></div>
+  <div class="ver smhome"><a id="cvHome" href="https://smaisle.app/">smAisle Home</a> · <span id="cvVer"></span></div>
 </div></div>
 
 <div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
@@ -133,7 +135,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>
 /*PUZZLE*/
 (function(){
-var VERSION='1.12',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.13',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -172,7 +174,7 @@ $('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
 $('menuBtn').onclick=function(){only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};$('dBoard').onclick=closeAll;
 function goHub(){if(window.DG_APP)return toApp({cmd:'home'});location.href='https://smaisle.app/daily/'}
 $('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=goHub;
-$('mSm').onclick=function(){if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
+$('mSm').onclick=$('cvHome').onclick=function(e){e.preventDefault();if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
 $('gateBuy').onclick=function(){if(window.DG_APP)toApp({cmd:'plus'});else location.href='https://smaisle.app/daily/#plus'};
 $('dShare').onclick=function(){var t=share(),b=$('dShare');try{if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({text:t}).catch(function(){});return}}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Share'},1500)},function(){})};
 $('termsGo').onclick=function(){var first=!store.get(TERMS,'');store.set(TERMS,TODAY);if(first)checkIn('open');if(!first&&sel)closeAll();else cover()};
@@ -191,7 +193,7 @@ function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}v
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
 ['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='Trackulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
-if(WEB||window.DG_APP){$('coverHub').hidden=false;$('mHub').hidden=false;$('hubBar').hidden=false;[$('coverHub'),$('hubBar')].forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}})}
+if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('hubBar').hidden=false;[$('coverHub'),$('hubBar')].forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}})}
 dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
 window.__tk=function(){return {p:p,RUN:RUN,sel:sel,DEMO:DEMO,share:RUN&&RUN.over?share():'',sfx:function(){return Object.keys(SFX).map(function(k){try{ctx();SFX[k](1);return ''}catch(e){return k+':'+e.message}}).join('')},G:G,set:function(a){sel=a.slice();allOn(1);reset();goReady()}}};
