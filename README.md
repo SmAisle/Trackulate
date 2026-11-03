@@ -12,3 +12,6 @@ First version. Daily board, 3 trains, Archive, Stats, streak, share, Settings, N
 
 ## v1.1 (Nov 2)
 New ticket icon (Jeff picked D).
+
+## v1.2 (Nov 2)
+New train whistle (Jeff picked Deeper B) at Depart and at the station.
