@@ -38,7 +38,7 @@ body{background:var(--paper);background-image:radial-gradient(rgba(0,0,0,.035) 1
  <div id="bd"></div>
  <div class="tix"><div class="nums"><div><small>In cart</small><b id="n">0</b></div><div><small>List</small><b>8</b></div></div><div class="r2"><b id="m"></b><span id="m2"></span></div></div>
  <button class="go" id="go" type="button" disabled>Check out</button>
- <div class="ver">Route test v0.8 · Nov 3 · mockup, not live</div>
+ <div class="ver">Route test v0.9 · Nov 3 · mockup, not live</div>
 </div>
 <script>
 (function(){
@@ -146,7 +146,9 @@ var OPT={timer:1,look:1,pc:1},t0=0,pen={},SPILL=[];
 function fam(n){return FAM.filter(function(f){return f.indexOf(n)>=0})[0]||[]}
 function make(n){var r=rng(n*7919+13),pool=shuf(ALL.slice(),r),list=pool.slice(0,8),rest=pool.slice(8),q=0,sol=[0],tiles={};for(var l=1;l<=8;l++){var k=kids(l-1,sol[l-1]);if(l>=4)k=k.filter(function(j){return j===1||j===2});sol[l]=k[Math.floor(r()*k.length)]}
  for(l=1;l<=8;l++){var like=OPT.look?shuf(fam(list[l-1]).filter(function(x){return x!==list[l-1]}),r):[],lk=0;for(var i=0;i<BW[l];i++){if(i===sol[l]){tiles[l+','+i]=list[l-1];continue}var t,seen=true,g=0;while(seen){g++;if(OPT.look&&lk<like.length&&g<9)t=like[lk++];else t=r()<.4?list[Math.floor(r()*8)]:rest[q++%rest.length];seen=t===list[l-1];for(var j=0;j<i;j++)if(tiles[l+','+j]===t)seen=true}tiles[l+','+i]=t}}
- var mode=n%2?'mom':'pc',need=list.slice(),swap=null;if(mode==='mom'){var row=5+Math.floor(r()*3),fr=list[row-1],cand=fam(fr).filter(function(x){return list.indexOf(x)<0}),to=cand.length?cand[Math.floor(r()*cand.length)]:rest[0];need[row-1]=to;var ws=[];for(var q2=0;q2<BW[row];q2++)if(q2!==sol[row])ws.push(q2);tiles[row+','+sol[row]]=to;for(q2=0;q2<BW[row];q2++)if(q2!==sol[row]&&tiles[row+','+q2]===to)tiles[row+','+q2]=rest[q++%rest.length];tiles[row+','+ws[Math.floor(r()*ws.length)]]=fr;swap={row:row,from:fr,to:to}}
+ var mode=n%2?'mom':'pc',need=list.slice(),swap=null;if(mode==='mom'){var row=5+Math.floor(r()*3),fr=list[row-1],cand=fam(fr).filter(function(x){return list.indexOf(x)<0}),to=cand.length?cand[Math.floor(r()*cand.length)]:rest[0];need[row-1]=to;var ws=kids(row-1,sol[row-1]).filter(function(j){return j!==sol[row]}),q2;tiles[row+','+sol[row]]=to;for(q2=0;q2<BW[row];q2++)if(q2!==sol[row]&&tiles[row+','+q2]===to)tiles[row+','+q2]=rest[q++%rest.length];tiles[row+','+ws[Math.floor(r()*ws.length)]]=fr;swap={row:row,from:fr,to:to}}
+ /* no item twice in one row; the right tile and Mom's trap stay put */
+ for(l=1;l<=8;l++){var used={};used[tiles[l+','+sol[l]]]=1;var trapI=-1;if(swap&&swap.row===l){for(i=0;i<BW[l];i++)if(i!==sol[l]&&tiles[l+','+i]===swap.from&&kids(l-1,sol[l-1]).indexOf(i)>=0){trapI=i;break}if(trapI>=0)used[swap.from]=1}for(i=0;i<BW[l];i++){if(i===sol[l]||i===trapI)continue;var tt=tiles[l+','+i];while(used[tt]||tt===need[l-1])tt=rest[q++%rest.length];tiles[l+','+i]=tt;used[tt]=1}}
  return {list:list,need:need,swap:swap,mode:mode,sol:sol,t:tiles}}
 function say(a,b){$('m').textContent=a;$('m2').textContent=b||''}
 function adj(l,i,j){return kids(l,i).indexOf(j)>=0}
