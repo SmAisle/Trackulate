@@ -145,7 +145,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.5',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.6',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -265,8 +265,7 @@ $('go').onclick=goBtn;$('dPlay').onclick=freePlay;$('dRoute').onclick=showRoute;
 /* cover picture: the train heading for the crossing */
 function art(){var c=$('cvArt'),r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;c.width=r.width*d;c.height=r.height*d;var sx=x;x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);var w=r.width,h=r.height,y=h*.62,i;x.fillStyle='#f4efe1';x.fillRect(0,0,w,h);x.strokeStyle='rgba(26,24,20,.12)';x.lineWidth=.6;for(i=8;i<h;i+=7){x.beginPath();x.moveTo(0,i);x.lineTo(w,i);x.stroke()}
  x.fillStyle='#5b3b20';for(i=2;i<w;i+=14)x.fillRect(i,y+3,8,5);x.fillStyle='#1a1814';x.fillRect(0,y,w,3);
- [[w*.1,h*.28],[w*.2,h*.22],[w*.9,h*.3]].forEach(function(t){var X=t[0],Y=t[1]+8;x.fillStyle='#1a1814';x.beginPath();x.moveTo(X-9,Y);x.lineTo(X,Y-27);x.lineTo(X+9,Y);x.closePath();x.fill()});
- var ox=w*.72;[[-118,car],[-54,tender],[0,loco]].forEach(function(t){x.save();x.translate(ox+t[0]*.72,y-1);x.scale(.72,.72);t[1]();x.restore()});x=sx}
+  var ox=w*.76;[[-188,car],[-111,car],[-51,tender],[0,loco]].forEach(function(t){x.save();x.translate(ox+t[0],y-1);x.scale(.72,.72);t[1]();x.restore()});x=sx}
 
 /* screens */
 var back=null;function only(id){if(id&&id!=='cover'&&!$('cover').hidden)back='cover';if(!id||id==='cover')back=null;document.querySelectorAll('.sheet').forEach(function(s){s.hidden=s.id!==id})}

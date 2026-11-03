@@ -54,5 +54,4 @@ $('go').onclick=goBtn;$('dPlay').onclick=freePlay;$('dRoute').onclick=showRoute;
 /* cover picture: the train heading for the crossing */
 function art(){var c=$('cvArt'),r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;c.width=r.width*d;c.height=r.height*d;var sx=x;x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);var w=r.width,h=r.height,y=h*.62,i;x.fillStyle='#f4efe1';x.fillRect(0,0,w,h);x.strokeStyle='rgba(26,24,20,.12)';x.lineWidth=.6;for(i=8;i<h;i+=7){x.beginPath();x.moveTo(0,i);x.lineTo(w,i);x.stroke()}
  x.fillStyle='#5b3b20';for(i=2;i<w;i+=14)x.fillRect(i,y+3,8,5);x.fillStyle='#1a1814';x.fillRect(0,y,w,3);
- [[w*.1,h*.28],[w*.2,h*.22],[w*.9,h*.3]].forEach(function(t){var X=t[0],Y=t[1]+8;x.fillStyle='#1a1814';x.beginPath();x.moveTo(X-9,Y);x.lineTo(X,Y-27);x.lineTo(X+9,Y);x.closePath();x.fill()});
- var ox=w*.72;[[-118,car],[-54,tender],[0,loco]].forEach(function(t){x.save();x.translate(ox+t[0]*.72,y-1);x.scale(.72,.72);t[1]();x.restore()});x=sx}
+  var ox=w*.76;[[-188,car],[-111,car],[-51,tender],[0,loco]].forEach(function(t){x.save();x.translate(ox+t[0],y-1);x.scale(.72,.72);t[1]();x.restore()});x=sx}
