@@ -9,3 +9,6 @@ A smAisle number game (Plus for now). Route the train through stops that change 
 
 ## v1.0 (Nov 2)
 First version. Daily board, 3 trains, Archive, Stats, streak, share, Settings, Navy, sound, demo, Plus preview (first train free).
+
+## v1.1 (Nov 2)
+New ticket icon (Jeff picked D).
