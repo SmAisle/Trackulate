@@ -17,8 +17,8 @@
 (function(){try{var d=localStorage.getItem('smaisle-dark');if(d==='on'||(d==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.mode='navy'}catch(e){}})();</script>
 <style>
 /* Layout: smAisle Daily bar, masthead, passenger ticket, railway board, message, button. Sheets for cover, menu and results. */
-:root{--paper:#f4efe1;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--btn:#1a1814;--btnInk:#f4efe1;--hi:#ffe27a;--hiInk:#1a1814;--red:#b3261e;--ok:#1d7a46;--shadow:rgba(0,0,0,.25);--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif;--body:"Libre Baskerville",Georgia,serif;color-scheme:light}
-html[data-mode=navy]{--paper:#121b2e;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--btn:#c9a961;--btnInk:#121b2e;--hiInk:#121b2e;--red:#ff8a7a;--ok:#7fd6a3;--shadow:#05080f;color-scheme:dark}
+:root{--paper:#f4efe1;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--btn:#1a1814;--btnInk:#f4efe1;--hi:#ffe27a;--hiInk:#1a1814;--red:#b3261e;--ok:#1d7a46;--shadow:rgba(0,0,0,.25);--line:#b9ae95;--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif;--body:"Libre Baskerville",Georgia,serif;color-scheme:light}
+html[data-mode=navy]{--paper:#121b2e;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--btn:#c9a961;--btnInk:#121b2e;--hiInk:#121b2e;--red:#ff8a7a;--ok:#7fd6a3;--shadow:#05080f;--line:#3a4a6b;color-scheme:dark}
 *{box-sizing:border-box}html,body{height:100%;margin:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 body{background:var(--paper);color:var(--ink);font:500 16px/1.35 var(--sans)}
 button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
@@ -28,8 +28,12 @@ button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipul
 #pno b{display:block;font:900 20px/1 var(--head)}#pno small{font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
 .rt{display:flex;gap:6px;align-items:center}.box{border:2px solid var(--ink);border-radius:4px;padding:2px 7px;font:800 10px var(--sans);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}.box b{font:900 16px var(--head);letter-spacing:0;margin-left:3px}
 #menuBtn{width:36px;height:32px;padding:0;border:2px solid var(--ink);border-radius:4px;background:transparent;font-size:17px;line-height:1}
-#mapBox{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center}#map{display:block;border:2px solid var(--ink);border-radius:3px;background:#f4efe1;cursor:pointer;box-sizing:border-box}html[data-mode=navy] #map{filter:invert(1);border-color:#10192a}
-.tk{flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--card);border:2px solid var(--ink);border-radius:3px;box-shadow:3px 3px 0 var(--shadow);padding:3px 10px;text-align:center}.tk small{display:block;font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.tk b{font:900 24px/1 var(--head)}.tk i{font-style:normal;font-size:18px}
+#scw{flex:0 0 clamp(104px,17vh,136px);position:relative;border:2px solid var(--ink);border-radius:3px;overflow:hidden}#sc{display:block;width:100%;height:100%}
+.ct{position:absolute;top:5px;background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:3px;padding:1px 7px;text-align:center;box-shadow:2px 2px 0 rgba(0,0,0,.3)}.ct small{display:block;font:800 8.5px var(--sans);letter-spacing:.06em;text-transform:uppercase}.ct b{font:900 19px/1 var(--head)}#c1{left:5px}#c2{right:5px}
+#bd{flex:1 1 0;min-height:0;position:relative}#bd svg{position:absolute;inset:0;width:100%;height:100%}
+.st{position:absolute;transform:translate(-50%,-50%);border:2px solid var(--ink);border-radius:5px;background:var(--card);color:var(--ink);font:800 16px var(--sans);display:grid;place-items:center;box-shadow:2px 2px 0 rgba(0,0,0,.3);padding:0;width:auto;min-height:0}.st.on{background:var(--hi);color:#1a1814}.st.fx{background:var(--ink);color:var(--paper);box-shadow:none}.st.fin.on{background:var(--hi)}
+.st.now{background:var(--ink)!important;color:#ffe27a!important;transform:translate(-50%,-50%) scale(1.22);z-index:2;box-shadow:0 0 0 3px #ffe27a,0 0 14px 3px rgba(232,168,23,.8);transition:transform .15s}.st.pa{background:#ecd9a0;color:#5f4312;border-color:#8a6a2a}
+html[data-mode=navy] .st{box-shadow:2px 2px 0 #05080f}html[data-mode=navy] .st.now{background:#fffdf6!important;color:#121b2e!important;box-shadow:0 0 0 3px #ffe27a,0 0 16px 5px rgba(255,226,122,.75)}
 #msg{flex:none;margin:0;height:36px;overflow:hidden;font-weight:700;font-size:14px;line-height:18px}
 .good{color:var(--ok)}.badt{color:var(--red)}
 .go{width:100%;padding:12px;border:2px solid var(--ink);border-radius:3px;background:var(--btn);color:var(--btnInk);font:800 15px var(--sans);text-transform:uppercase;letter-spacing:.08em}
@@ -58,7 +62,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 #demoBlock{position:fixed;inset:0;z-index:24}#demoBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);transform:translateX(-50%);z-index:25;width:min(calc(100% - 20px),460px);background:var(--card);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--shadow);padding:7px 10px;display:grid;grid-template-columns:minmax(0,1fr) 78px;gap:3px 10px;align-items:center}
 .dt{grid-column:1/-1;display:flex;justify-content:space-between;font:800 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}#demoSkip{background:none;border:0;padding:0 0 0 8px;font:inherit;color:inherit;text-decoration:underline}#demoText{margin:0;font:500 14px/1.3 var(--sans);min-height:54px}#demoNext{height:40px;border:2px solid var(--ink);border-radius:3px;background:var(--hi);color:var(--hiInk);font:800 14px var(--sans)}#demoNext:disabled{opacity:.4}
 [hidden]{display:none!important}
-@media (max-height:700px){.tk b{font-size:21px}#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
+@media (max-height:700px){#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
 .go:disabled{opacity:.4}
 </style>
 </head>
@@ -75,8 +79,8 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <div id="app">
   <a id="hubBar" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
   <div class="top"><div id="pno"><b id="noLabel">No. 1</b><small id="dateLabel"></small></div><div class="rt"><div class="box">Train<b id="stop">1/3</b></div><button id="menuBtn" aria-label="Menu">☰</button></div></div>
-  <div class="tk"><div><small>Passengers aboard</small><b id="st"></b></div><i>→</i><div><small>Station needs</small><b id="tg"></b></div></div>
-  <div id="mapBox"><canvas id="map" role="img" aria-label="Tilted railway board. Tap a stop to route the train through it."></canvas></div>
+  <div id="scw"><canvas id="sc" role="img" aria-label="A train running past the stops on your route."></canvas><div class="ct" id="c1"><small>Aboard</small><b id="st"></b></div><div class="ct" id="c2"><small>Needs</small><b id="tg"></b></div></div>
+  <div id="bd"></div>
   <p id="msg"></p>
   <button class="go" id="go" type="button">Depart</button>
 </div>
@@ -97,7 +101,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 </div></div>
 
 <div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
-  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap one stop in every row to build a <b>route</b>. Each stop changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b>. Everyone gets the same board each day.</li></ol>
+  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap one stop in every row to build a <b>route</b>. Each stop changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b> for your score. Everyone gets the same board each day.</li></ol>
   <button class="go" id="helpDemo">Watch the demo</button><div class="ver" id="helpVer"></div></div></div>
 
 <div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
@@ -113,6 +117,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <div class="sheet" id="stats" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Your Stats</h2><div class="statgrid" id="statgrid"></div><div class="ver" id="sVer"></div></div></div>
 
 <div class="sheet" id="done" hidden><div class="card" style="text-align:center"><h2 id="dTitle" style="padding-right:0"></h2><div class="big" id="dBig"></div><div class="dgrid" id="dGrid"></div><div id="dSub"></div>
+  <div class="row2" id="dLost" hidden><button class="go alt" id="dPlay">Keep playing</button><button class="go alt" id="dRoute">Show the route</button></div>
   <div class="row2"><button class="go" id="dShare">Share</button><button class="go y" id="dHub" hidden>‹ smAisle Daily</button></div>
   <div class="row2"><button class="go alt" id="dPast">Archive</button><button class="go alt" id="dStats">Stats</button></div>
   <button class="go alt" id="dBoard">See the track</button><div class="ver" id="dNext"></div>
@@ -128,7 +133,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>
 /*PUZZLE*/
 (function(){
-var VERSION='1.4',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.5',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -179,9 +184,9 @@ function dark(){var d=store.get('smaisle-dark','off');if(d!=='on'&&d!=='auto')d=
 darkQ.addEventListener&&darkQ.addEventListener('change',dark);document.querySelectorAll('#segDark button').forEach(function(b){b.onclick=function(){store.set('smaisle-dark',b.dataset.v);dark()}});
 function snd(){document.querySelectorAll('#segSound button').forEach(function(b){b.classList.toggle('sel',b.dataset.v===store.get('tk-sound','on'))})}document.querySelectorAll('#segSound button').forEach(function(b){b.onclick=function(){store.set('tk-sound',b.dataset.v);snd()}});
 /* demo: a guided walkthrough on one fixed board. Tap Next at each step. */
-var DP=makePuzzle(1),DS=[{t:function(){return 'The train starts with <b>'+DP.start+' passengers</b>. The station needs exactly <b>'+DP.target+'</b>.'}},{r:function(){pickStop(1,1);mkPath();POS=START;dirty=true;play('thrown')},t:function(){return 'Tap a stop to send the train through it. <b>Yellow</b> shows your route.'}},{r:function(){depart()},w:function(){return DEMO.done&&crash>.7},t:function(){return 'Every stop changes the count. Wrong count at the crossing: <b>derailed</b>.'}},{r:function(){DEMO.done=0;sel=DP.sol.slice();allOn(1);reset();say('')},t:function(){return 'You get <b>3 trains</b> to find a better route. Let’s try this one.'}},{r:function(){depart()},w:function(){return DEMO.done},t:function(){return 'Exact! The gate lifts and the train reaches the station.'}},{t:function(){return 'Same board for everyone each day. Good luck!'}}];
+var DP=makePuzzle(1),DS=[{t:function(){return 'The train starts with <b>'+DP.start+' passengers</b>. The station needs exactly <b>'+DP.target+'</b>.'}},{r:function(){pickStop(1,1);PK[1]=1;buildBoard();play('thrown')},t:function(){return 'Tap a stop to send the train through it. <b>Yellow</b> shows your route.'}},{r:function(){depart()},w:function(){return DEMO.done&&G.crash>.7},t:function(){return 'Every stop changes the count. Wrong count at the crossing: <b>derailed</b>.'}},{r:function(){DEMO.done=0;sel=DP.sol.slice();allOn(1);reset();say('')},t:function(){return 'You get <b>3 trains</b> to find a better route. Let’s try this one.'}},{r:function(){depart()},w:function(){return DEMO.done},t:function(){return 'Exact! The gate lifts and the train reaches the station.'}},{t:function(){return 'Same board for everyone each day. Good luck!'}}];
 function stopDemo(){if(!DEMO)return;DEMO=null;anim=null;busy=false;$('demoBar').hidden=true;$('demoBlock').hidden=true}
-function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;sel=firstRoute();allOn(1);reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
+function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;FREE=false;sel=firstRoute();allOn(1);reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
 function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}var s=DS[DEMO.i];$('demoStep').textContent='Demo · '+(DEMO.i+1)+' of '+DS.length;$('demoNext').disabled=true;$('demoNext').textContent=DEMO.i===DS.length-1?'Done':'Next';if(s.r)s.r();var wait=function(){if(!DEMO)return;if(!s.w||s.w()){$('demoText').innerHTML=s.t();$('demoNext').disabled=false}else setTimeout(wait,150)};setTimeout(wait,s.r?400:60)}
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
@@ -189,7 +194,7 @@ function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(func
 if(WEB||window.DG_APP){$('coverHub').hidden=false;$('mHub').hidden=false;$('hubBar').hidden=false;[$('coverHub'),$('hubBar')].forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}})}
 dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
-window.__tk=function(){return {p:p,RUN:RUN,sel:sel,CH:CH,DEMO:DEMO,share:RUN&&RUN.over?share():'',sfx:function(){return Object.keys(SFX).map(function(k){try{ctx();SFX[k](1);return ''}catch(e){return k+':'+e.message}}).join('')},set:function(a){sel=a.slice();mkPath();POS=START;dirty=true}}};
+window.__tk=function(){return {p:p,RUN:RUN,sel:sel,DEMO:DEMO,share:RUN&&RUN.over?share():'',sfx:function(){return Object.keys(SFX).map(function(k){try{ctx();SFX[k](1);return ''}catch(e){return k+':'+e.message}}).join('')},G:G,set:function(a){sel=a.slice();allOn(1);reset();goReady()}}};
 })();
 </script>
 </body>
