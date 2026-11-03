@@ -15,3 +15,6 @@ New ticket icon (Jeff picked D).
 
 ## v1.2 (Nov 2)
 New train whistle (Jeff picked Deeper B) at Depart and at the station.
+
+## v1.3 (Nov 2)
+Easier-to-read stops: bold plain numbers, all one size (Jeff picked B).

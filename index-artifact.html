@@ -134,7 +134,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.2',VDATE='Nov 2',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.3',VDATE='Nov 2',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -190,7 +190,7 @@ function rail(a,b,on){var n=Math.max(4,Math.round(Math.hypot(b[0]-a[0],b[1]-a[1]
  if(on){var c=[P2(0,-10),P2(1,-10),P2(1,10),P2(0,10)];x.beginPath();c.forEach(function(q,i){i?x.lineTo(q.x,q.y):x.moveTo(q.x,q.y)});x.closePath();x.fillStyle=HI();x.fill()}
  x.strokeStyle=on?'#1a1814':'rgba(26,24,20,.42)';x.lineWidth=on?1.6:1;for(var i=0;i<=n;i++){var t=i/n,q=P2(t,-8),r=P2(t,8);x.beginPath();x.moveTo(q.x,q.y);x.lineTo(r.x,r.y);x.stroke()}
  [-5,5].forEach(function(o){var q=P2(0,o),r=P2(1,o);x.strokeStyle=on?'#1a1814':'rgba(26,24,20,.6)';x.lineWidth=on?2.4:1.2;x.beginPath();x.moveTo(q.x,q.y);x.lineTo(r.x,r.y);x.stroke()})}
-function sign(c,on){var q=pr(c.wx,c.wz),s=Math.max(.84,q.s*.94),w=60*s,h=34*s,X=q.x,Y=q.y-16*s;rr(X-w/2+3,Y-h/2+3,w,h,1);P('rgba(26,24,20,.85)',0);rr(X-w/2,Y-h/2,w,h,1);P(on?HI():'#fffdf6',1,1.8);rr(X-w/2+3,Y-h/2+3,w-6,h-6,0);x.strokeStyle='#1a1814';x.lineWidth=.8;x.stroke();x.fillStyle='#1a1814';x.font='900 '+Math.round(24*s)+'px Playfair Display,Georgia,serif';x.textAlign='center';x.textBaseline='middle';x.fillText(c.t,X,Y+1);x.textBaseline='alphabetic';x.textAlign='left';c.box=[X-w/2-3,Y-h/2-4,w+6,h+10]}
+function sign(c,on){var q=pr(c.wx,c.wz),w=60,h=32,X=q.x,Y=q.y-16;rr(X-w/2+3,Y-h/2+3,w,h,3);P('rgba(26,24,20,.85)',0);rr(X-w/2,Y-h/2,w,h,3);P(on?HI():'#fffdf6',1,1.8);x.fillStyle='#1a1814';x.font='800 25px Libre Franklin,Helvetica Neue,Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(c.t,X,Y+1);x.textBaseline='alphabetic';x.textAlign='left';c.box=[X-w/2-3,Y-h/2-4,w+6,h+10]}
 function crossing(){var q=pr(0,GATEZ),X=q.x,Y=q.y;[-1,1].forEach(function(d){var px=X+d*34;x.fillStyle='#1a1814';x.fillRect(px-2,Y-16,4,20);x.save();x.translate(px,Y-13);x.rotate(d<0?-gate*Math.PI/2:Math.PI+gate*Math.PI/2);for(var i=0;i<3;i++){x.fillStyle=i%2?'#fffdf6':RED();x.fillRect(i*11,-2.5,11,5)}x.strokeStyle='#1a1814';x.lineWidth=1.1;x.strokeRect(0,-2.5,33,5);x.restore();x.fillStyle=gate>.5?GRN():RED();x.beginPath();x.arc(px,Y-13,3.2,0,7);x.fill()})}
 function word(){var Y=VH-34;x.fillStyle='#f4efe1';x.fillRect(0,Y,VW,34);x.strokeStyle='#1a1814';x.lineWidth=1.2;[Y,Y+3].forEach(function(l){x.beginPath();x.moveTo(0,l);x.lineTo(VW,l);x.stroke()});x.fillStyle='#1a1814';x.font='900 21px Playfair Display,Georgia,serif';x.textAlign='center';x.fillText('Station',VW/2,Y+25);x.textAlign='left'}
 /* Corners are rounded so the train turns smoothly. STOP[i] is the distance along the track to stop i. */
