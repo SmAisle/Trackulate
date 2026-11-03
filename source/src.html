@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Trackulate</title>
+<meta name="description" content="A daily number train game. Route the train and reach the station with the exact passenger count.">
+<meta name="theme-color" content="#f4efe1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trackulate">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Libre+Baskerville:ital@0;1&family=Playfair+Display:wght@900&display=swap">
+<script>/* Set the color set before the page draws (shared smAisle setting). Default is Off. */
+(function(){try{var d=localStorage.getItem('smaisle-dark');if(d==='on'||(d==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.mode='navy'}catch(e){}})();</script>
+<style>
+/* Layout: smAisle Daily bar, masthead, passenger ticket, railway board, message, button. Sheets for cover, menu and results. */
+:root{--paper:#f4efe1;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--btn:#1a1814;--btnInk:#f4efe1;--hi:#ffe27a;--hiInk:#1a1814;--red:#b3261e;--ok:#1d7a46;--shadow:rgba(0,0,0,.25);--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif;--body:"Libre Baskerville",Georgia,serif;color-scheme:light}
+html[data-mode=navy]{--paper:#121b2e;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--btn:#c9a961;--btnInk:#121b2e;--hiInk:#121b2e;--red:#ff8a7a;--ok:#7fd6a3;--shadow:#05080f;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%;margin:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body{background:var(--paper);color:var(--ink);font:500 16px/1.35 var(--sans)}
+button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+#hubBar{flex:none;align-self:flex-start;font:800 12px var(--sans);color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:2px 8px;text-decoration:none}
+#app{max-width:480px;margin:0 auto;height:100%;height:100dvh;display:flex;flex-direction:column;gap:6px;padding-block:calc(env(safe-area-inset-top,0px) + 6px) calc(env(safe-area-inset-bottom,0px) + 10px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:3px double var(--ink);padding-bottom:5px}
+#pno b{display:block;font:900 20px/1 var(--head)}#pno small{font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.rt{display:flex;gap:6px;align-items:center}.box{border:2px solid var(--ink);border-radius:4px;padding:2px 7px;font:800 10px var(--sans);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}.box b{font:900 16px var(--head);letter-spacing:0;margin-left:3px}
+#menuBtn{width:36px;height:32px;padding:0;border:2px solid var(--ink);border-radius:4px;background:transparent;font-size:17px;line-height:1}
+#mapBox{flex:1 1 0;min-height:0;display:flex;align-items:center;justify-content:center}#map{display:block;border:2px solid var(--ink);border-radius:3px;background:#f4efe1;cursor:pointer;box-sizing:border-box}html[data-mode=navy] #map{filter:invert(1);border-color:#10192a}
+.tk{flex:none;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--card);border:2px solid var(--ink);border-radius:3px;box-shadow:3px 3px 0 var(--shadow);padding:3px 10px;text-align:center}.tk small{display:block;font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.tk b{font:900 24px/1 var(--head)}.tk i{font-style:normal;font-size:18px}
+#msg{flex:none;margin:0;height:36px;overflow:hidden;font-weight:700;font-size:14px;line-height:18px}
+.good{color:var(--ok)}.badt{color:var(--red)}
+.go{width:100%;padding:12px;border:2px solid var(--ink);border-radius:3px;background:var(--btn);color:var(--btnInk);font:800 15px var(--sans);text-transform:uppercase;letter-spacing:.08em}
+html[data-mode=navy] .go{border-color:var(--btn)}
+.go.alt{background:var(--card);color:var(--ink);border-color:var(--ink)}.go.y{background:var(--hi);color:var(--hiInk);border-color:var(--ink);text-transform:none;letter-spacing:.02em}
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:12px 16px;background:rgba(26,24,20,.5);overflow:auto}html[data-mode=navy] .sheet{background:rgba(5,8,15,.75)}
+.card{position:relative;width:100%;max-width:420px;margin:auto;background:var(--paper);border:3px double var(--ink);box-shadow:6px 6px 0 var(--shadow);padding:15px 16px;display:grid;gap:8px}
+.card h2{font:900 26px/1.1 var(--head);margin:0;padding-right:34px;border-bottom:1px solid var(--ink);padding-bottom:6px}
+.x{position:absolute;top:9px;right:9px;width:34px;height:32px;padding:0;background:var(--card);border:2px solid var(--ink);border-radius:4px;font-size:15px}
+.ver{text-align:center;font:500 12px var(--sans);color:var(--fade)}
+.mlinks{display:flex;justify-content:center;gap:10px;font:700 12px var(--sans);flex-wrap:wrap}.mlinks button,.mlinks a{background:none;border:0;padding:5px;font:inherit;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+.set{display:grid;gap:5px;border-top:1px solid var(--ink);padding-top:8px}.set h3{margin:0;text-align:center;font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}.set small{text-align:center;font-size:11px;color:var(--fade)}
+.seg{display:flex;gap:6px}.seg button{flex:1;padding:9px 4px;border:2px solid var(--ink);border-radius:3px;background:var(--card);font:800 12px var(--sans);text-transform:uppercase}.seg button.sel{background:var(--ink);color:var(--paper)}
+#cover{background:var(--paper);z-index:30}#cover .in{width:100%;max-width:340px;margin:auto;display:grid;gap:12px;text-align:center;justify-items:stretch}
+#coverHub{justify-self:start;font:800 13px var(--sans);color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:6px 10px;text-decoration:none}
+.mh{border-top:3px double var(--ink);border-bottom:3px double var(--ink);padding:8px 0}.mh h1{font:900 clamp(38px,12vw,50px)/1 var(--head);margin:0}.mh div{display:flex;justify-content:space-between;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;color:var(--ink2)}
+.tag{font:italic 400 15px/1.45 var(--body);margin:0}#cvArt{display:block;width:100%;height:120px;border:2px solid var(--ink);border-radius:4px}
+.lk{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font:800 12px var(--sans);letter-spacing:.06em;text-transform:uppercase}.lk button{background:none;border:0;padding:6px 2px;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink);text-decoration:underline}
+#cvStats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}#cvStats div,.statgrid div{display:grid;font:700 10px var(--sans);text-transform:uppercase;color:var(--ink2)}#cvStats b,.statgrid b{font:900 22px var(--head);color:var(--ink)}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.how{margin:0;padding-left:18px;display:grid;gap:7px;font:500 15px/1.35 var(--sans)}
+.past{display:grid;gap:6px;max-height:62vh;overflow:auto}.past button{display:flex;justify-content:space-between;gap:8px;padding:10px;background:var(--card);border:2px solid var(--ink);border-radius:3px;font:700 14px var(--sans);text-align:left}
+.big{font:900 46px/1 var(--head);text-align:center}.dgrid{text-align:center;font-size:21px;letter-spacing:2px}
+.more{display:grid;gap:5px}.more h3{margin:0;font:800 11px var(--sans);text-align:center;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.moreRow{display:flex;gap:8px;overflow-x:auto;padding:2px}.moreRow a{flex:0 0 60px;font:700 10px/1.15 var(--sans);text-align:center;color:var(--ink);text-decoration:none}.moreRow img{display:block;width:50px;height:50px;margin:0 auto 3px;border:1.5px solid var(--ink);border-radius:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row2 .go{padding:11px 4px;font-size:13px}
+#demoBlock{position:fixed;inset:0;z-index:24}#demoBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);transform:translateX(-50%);z-index:25;width:min(calc(100% - 20px),460px);background:var(--card);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--shadow);padding:7px 10px;display:grid;grid-template-columns:minmax(0,1fr) 78px;gap:3px 10px;align-items:center}
+.dt{grid-column:1/-1;display:flex;justify-content:space-between;font:800 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}#demoSkip{background:none;border:0;padding:0 0 0 8px;font:inherit;color:inherit;text-decoration:underline}#demoText{margin:0;font:500 14px/1.3 var(--sans);min-height:54px}#demoNext{height:40px;border:2px solid var(--ink);border-radius:3px;background:var(--hi);color:var(--hiInk);font:800 14px var(--sans)}#demoNext:disabled{opacity:.4}
+[hidden]{display:none!important}
+@media (max-height:700px){.tk b{font-size:21px}#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
+</style>
+</head>
+<body>
+<!-- smAisle fit + zoom guard v1 -->
+<style>
+#smUpright{display:none;position:fixed;inset:0;z-index:2147483000;background:var(--paper,#f4efe1);color:var(--ink,#1a1814);align-items:center;justify-content:center;text-align:center;padding:24px;font:800 15px/1.4 "Libre Franklin","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+#smUpright b{display:block;font:900 44px/1 "Playfair Display",Georgia,serif;letter-spacing:0;margin-bottom:10px}
+@media (orientation:landscape) and (max-height:500px) and (hover:none){#smUpright{display:flex}}
+</style>
+<div id="smUpright" aria-live="polite"><div><b>↻</b>Turn your phone upright to play</div></div>
+<script>['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener('dblclick',function(e){e.preventDefault()},{passive:false});</script>
+
+<div id="app">
+  <a id="hubBar" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
+  <div class="top"><div id="pno"><b id="noLabel">No. 1</b><small id="dateLabel"></small></div><div class="rt"><div class="box">Train<b id="stop">1/3</b></div><button id="menuBtn" aria-label="Menu">☰</button></div></div>
+  <div class="tk"><div><small>Passengers aboard</small><b id="st"></b></div><i>→</i><div><small>Station needs</small><b id="tg"></b></div></div>
+  <div id="mapBox"><canvas id="map" role="img" aria-label="Tilted railway board. Tap a stop to route the train through it."></canvas></div>
+  <p id="msg"></p>
+  <button class="go" id="go" type="button">Depart</button>
+</div>
+
+<div class="sheet" id="terms" hidden><div class="card"><h2>Trackulate</h2>
+  <ul class="how"><li>Trackulate is a game, just for fun. No real money, no betting and no prizes.</li><li>It’s provided as is, and it may change or stop working at any time.</li><li>No accounts and no ads. Nothing is sold. Your results stay on your device.</li><li>The website version sends an anonymous check-in so we can count how many devices play. It never includes your name, contacts or location.</li></ul>
+  <button class="go" id="termsGo">Agree and play</button><div class="ver">By tapping Agree and play, you accept these terms.</div></div></div>
+
+<div class="sheet" id="cover" hidden><div class="in">
+  <a id="coverHub" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
+  <div class="mh"><h1>Trackulate</h1><div><span id="cvDate"></span><span id="cvNo"></span></div></div>
+  <canvas id="cvArt" aria-hidden="true"></canvas>
+  <p class="tag">Pick up passengers along the line. The crossing only opens for the exact count.</p>
+  <div id="cvStats" hidden></div>
+  <button class="go" id="coverGo">Play today’s board</button>
+  <div class="lk"><button id="coverPast">Archive</button><button id="coverStats">Stats</button><button id="coverHow">How to Play</button><button id="coverDemo">Demo</button></div>
+  <div class="ver" id="cvVer"></div>
+</div></div>
+
+<div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
+  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap stops to pick a <b>route</b>. Each stop you pass through changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b>. Everyone gets the same board each day.</li></ol>
+  <button class="go" id="helpDemo">Watch the demo</button><div class="ver" id="helpVer"></div></div></div>
+
+<div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
+  <button class="go" id="mBack">Back to the game</button><button class="go alt" id="mHow">How to Play</button><button class="go alt" id="mPast">Archive</button><button class="go alt" id="mStats">Stats</button><button class="go y" id="mHub" hidden>‹ smAisle Daily</button><button class="go alt" id="mSet">Settings</button><div class="ver" id="mVer"></div></div></div>
+
+<div class="sheet" id="settings" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Settings</h2>
+  <div class="set"><h3>Sound</h3><div class="seg" id="segSound"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
+  <div class="set"><h3>Dark mode</h3><div class="seg" id="segDark"><button data-v="off">Off</button><button data-v="on">On</button><button data-v="auto">Match phone</button></div><small>On uses Navy. Match phone switches with your phone.</small></div>
+  <div class="mlinks"><button id="mFront">Front page</button><button id="mTerms">Terms</button><button id="mSm">See our other games ›</button></div>
+  <button class="go" id="setBack">Back to the menu</button></div></div>
+
+<div class="sheet" id="past" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Archive</h2><div class="past" id="pastList"></div></div></div>
+<div class="sheet" id="stats" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Your Stats</h2><div class="statgrid" id="statgrid"></div><div class="ver" id="sVer"></div></div></div>
+
+<div class="sheet" id="done" hidden><div class="card" style="text-align:center"><h2 id="dTitle" style="padding-right:0"></h2><div class="big" id="dBig"></div><div class="dgrid" id="dGrid"></div><div id="dSub"></div>
+  <div class="row2"><button class="go" id="dShare">Share</button><button class="go y" id="dHub" hidden>‹ smAisle Daily</button></div>
+  <div class="row2"><button class="go alt" id="dPast">Archive</button><button class="go alt" id="dStats">Stats</button></div>
+  <button class="go alt" id="dBoard">See the track</button><div class="ver" id="dNext"></div>
+  <div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
+
+<div class="sheet" id="gate" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">That was your free train</h2><p style="margin:0">Get two more trains today, plus the Archive, with smAisle Daily Plus.</p><button class="go" id="gateBuy" style="text-transform:none;letter-spacing:.02em">Get smAisle Daily Plus</button><button class="go y" id="gateHub">‹ smAisle Daily</button><div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
+
+<div id="demoBlock" hidden></div>
+<div id="demoBar" hidden><div class="dt"><span id="demoStep">Demo</span><button id="demoSkip">Skip</button></div><p id="demoText"></p><button id="demoNext">Next</button></div>
+
+<script>
+/*PUZZLE*/
+(function(){
+var VERSION='1.0',VDATE='Nov 2',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
+var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
+var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+/* dates: new run at midnight Eastern */
+function todayStr(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York'}).format(new Date())}
+function dayNo(d){return Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(EPOCH+'T12:00:00Z'))/864e5)+1}
+function dateOf(n){return new Date(Date.parse(EPOCH+'T12:00:00Z')+(n-1)*864e5).toISOString().slice(0,10)}
+function nice(d,o){return new Date(d+'T12:00:00Z').toLocaleDateString('en-US',Object.assign({timeZone:'UTC'},o))}
+var TODAY=todayStr();
+/* Plus: preview in the app without Plus or with ?preview=1. The first train is free. */
+function PREVIEW(){return new URLSearchParams(location.search).get('preview')==='1'&&!(window.DG_APP&&window.DG_APP.plus)||(!!window.DG_APP&&!window.DG_APP.plus)}
+function toApp(m){try{window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.dg&&webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
+if(!window.dgNative)window.dgNative=function(cmd,d){if(cmd!=='store'||!window.DG_APP)return;window.DG_APP.plus=!!(d&&d.plus);previewUI();if(!PREVIEW()&&!$('gate').hidden)only('')};
+/* sound: version A of each sound from the soundboard, with the shared sound comeback */
+var smAC=null,smAway=false,M=null,MC=null;
+function getAC(){try{if(!smAC||smAC.state==='closed')smAC=new(window.AudioContext||window.webkitAudioContext)();if(smAC.state!=='running'){var old=smAC;old.resume().catch(function(){});setTimeout(function(){if(smAC===old&&old.state!=='running'&&!document.hidden){try{old.close()}catch(e){}smAC=null}},600)}}catch(e){smAC=null}return smAC}
+function smAwake(){if(smAC&&smAway){try{smAC.close()}catch(e){}smAC=null}smAway=false}
+document.addEventListener('visibilitychange',function(){if(document.hidden)smAway=true});addEventListener('pagehide',function(){smAway=true});addEventListener('pageshow',function(e){if(e.persisted)smAway=true});
+['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
+function ctx(){var c=getAC();if(c!==MC){MC=c;NB=null;M=c.createGain();M.gain.value=.9;var k=c.createDynamicsCompressor();M.connect(k);k.connect(c.destination)}return c}
+/*SOUNDLIB*/
+function play(n,v){if(store.get('tk-sound','on')==='off')return;try{SFX[n](v)}catch(e){}}
+/*GAME*/
+/* screens */
+var back=null;function only(id){if(id&&id!=='cover'&&!$('cover').hidden)back='cover';if(!id||id==='cover')back=null;document.querySelectorAll('.sheet').forEach(function(s){s.hidden=s.id!==id})}
+function closeAll(){only('')}
+document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){b.closest('.sheet').hidden=true;if(back==='cover')cover()}});
+function cover(){stopDemo();only('cover');var r=store.json(skey(TODAY),null);$('cvDate').textContent=nice(TODAY,{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('cvNo').textContent='Board No. '+dayNo(TODAY);$('coverGo').textContent=r?'See today’s results':'Play today’s board';var s=statsOf();$('cvStats').hidden=!s.played;if(s.played)$('cvStats').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.cur,'Streak'],[s.max,'Best']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');art()}
+function start(d){stopDemo();TODAY=todayStr();closeAll();size();setup(d);frame();if(RUN&&RUN.over)setTimeout(showDone,200)}
+$('coverGo').onclick=function(){start(TODAY);if(!RUN)checkIn('open')};
+$('coverHow').onclick=$('mHow').onclick=function(){only('help')};
+function arch(){var h=store.json('tk-hist',{}),n=dayNo(TODAY),o='';for(var i=n;i>=1;i--){var d=dateOf(i),r=h[d];o+='<button data-d="'+d+'"><span>No. '+i+' · '+nice(d,{month:'short',day:'numeric'})+(i===n?' · Today':'')+'</span><span>'+(r?(r.w?'Train '+r.n:'Derailed')+(r.late?' · late':''):'Play')+'</span></button>'}$('pastList').innerHTML=o;$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){start(b.dataset.d)}});only('past')}
+$('coverPast').onclick=$('mPast').onclick=$('dPast').onclick=arch;
+function stats(){var s=statsOf();$('statgrid').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.played?Math.round(s.wins/s.played*100)+'%':'–','Exact %'],[s.cur,'Streak'],[s.max,'Best streak'],[s.first,'First train']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');only('stats')}
+$('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
+$('menuBtn').onclick=function(){only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};$('dBoard').onclick=closeAll;
+function goHub(){if(window.DG_APP)return toApp({cmd:'home'});location.href='https://smaisle.app/daily/'}
+$('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=goHub;
+$('mSm').onclick=function(){if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
+$('gateBuy').onclick=function(){if(window.DG_APP)toApp({cmd:'plus'});else location.href='https://smaisle.app/daily/#plus'};
+$('dShare').onclick=function(){var t=share(),b=$('dShare');try{if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({text:t}).catch(function(){});return}}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Share'},1500)},function(){})};
+$('termsGo').onclick=function(){var first=!store.get(TERMS,'');store.set(TERMS,TODAY);if(first)checkIn('open');if(!first&&sel)closeAll();else cover()};
+var moreTried=false;function drawMore(){var S=window.SMAISLE;if(!S||!S.games)return;var L2=S.games.filter(function(g){return g.id!=='tk'&&g.url&&g.icon});if(!L2.length)return;document.querySelectorAll('.more').forEach(function(m){var r=m.querySelector('.moreRow');r.innerHTML=L2.map(function(g){return '<a href="'+g.url+'"><img src="'+g.icon+'" alt="" loading="lazy">'+g.name+'</a>'}).join('');r.querySelectorAll('a').forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'open',url:a.href})}}});m.hidden=false})}
+function loadMore(){if(window.SMAISLE)return drawMore();if(moreTried)return;moreTried=true;var s=document.createElement('script');s.src='https://smaisle.app/daily/games.js';s.onload=drawMore;document.head.appendChild(s)}
+/* dark mode and sound settings */
+var darkQ=matchMedia('(prefers-color-scheme: dark)');
+function dark(){var d=store.get('smaisle-dark','off');if(d!=='on'&&d!=='auto')d='off';var n=d==='on'||(d==='auto'&&darkQ.matches),h=document.documentElement,was=h.dataset.mode==='navy';if(n)h.dataset.mode='navy';else delete h.dataset.mode;document.querySelector('meta[name=theme-color]').content=n?'#121b2e':'#f4efe1';if(was!==n)toApp({cmd:'mode',navy:n});dirty=true;document.querySelectorAll('#segDark button').forEach(function(b){b.classList.toggle('sel',b.dataset.v===d)})}
+darkQ.addEventListener&&darkQ.addEventListener('change',dark);document.querySelectorAll('#segDark button').forEach(function(b){b.onclick=function(){store.set('smaisle-dark',b.dataset.v);dark()}});
+function snd(){document.querySelectorAll('#segSound button').forEach(function(b){b.classList.toggle('sel',b.dataset.v===store.get('tk-sound','on'))})}document.querySelectorAll('#segSound button').forEach(function(b){b.onclick=function(){store.set('tk-sound',b.dataset.v);snd()}});
+/* demo: a guided walkthrough on one fixed board. Tap Next at each step. */
+var DP=makePuzzle(1),DS=[{t:function(){return 'The train starts with <b>'+DP.start+' passengers</b>. The station needs exactly <b>'+DP.target+'</b>.'}},{r:function(){pickStop(1,1);mkPath();POS=START;dirty=true;play('thrown')},t:function(){return 'Tap a stop to send the train through it. <b>Yellow</b> shows your route.'}},{r:function(){depart()},w:function(){return DEMO.done&&crash>.7},t:function(){return 'Every stop changes the count. Wrong count at the crossing: <b>derailed</b>.'}},{r:function(){DEMO.done=0;sel=DP.sol.slice();reset();say('')},t:function(){return 'You get <b>3 trains</b> to find a better route. Let’s try this one.'}},{r:function(){depart()},w:function(){return DEMO.done},t:function(){return 'Exact! The gate lifts and the train reaches the station.'}},{t:function(){return 'Same board for everyone each day. Good luck!'}}];
+function stopDemo(){if(!DEMO)return;DEMO=null;anim=null;busy=false;$('demoBar').hidden=true;$('demoBlock').hidden=true}
+function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;sel=firstRoute();reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
+function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}var s=DS[DEMO.i];$('demoStep').textContent='Demo · '+(DEMO.i+1)+' of '+DS.length;$('demoNext').disabled=true;$('demoNext').textContent=DEMO.i===DS.length-1?'Done':'Next';if(s.r)s.r();var wait=function(){if(!DEMO)return;if(!s.w||s.w()){$('demoText').innerHTML=s.t();$('demoNext').disabled=false}else setTimeout(wait,150)};setTimeout(wait,s.r?400:60)}
+$('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
+function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
+['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='Trackulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
+if(WEB||window.DG_APP){$('coverHub').hidden=false;$('mHub').hidden=false;$('hubBar').hidden=false;[$('coverHub'),$('hubBar')].forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}})}
+dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
+if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
+window.__tk=function(){return {p:p,RUN:RUN,sel:sel,CH:CH,DEMO:DEMO,share:RUN&&RUN.over?share():'',sfx:function(){return Object.keys(SFX).map(function(k){try{ctx();SFX[k](1);return ''}catch(e){return k+':'+e.message}}).join('')},set:function(a){sel=a.slice();mkPath();POS=START;dirty=true}}};
+})();
+</script>
+</body>
+</html>
