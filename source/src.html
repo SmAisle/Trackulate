@@ -16,13 +16,13 @@
 <script>/* Set the color set before the page draws (shared smAisle setting). Default is Off. */
 (function(){try{var d=localStorage.getItem('smaisle-dark');if(d==='on'||(d==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.mode='navy'}catch(e){}})();</script>
 <style>
-/* Layout: smAisle Daily bar, masthead, passenger ticket, railway board, message, button. Sheets for cover, menu and results. */
+/* Layout: masthead, passenger ticket, railway board, message, button. Sheets for cover, menu and results. */
 :root{--paper:#f4efe1;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--btn:#1a1814;--btnInk:#f4efe1;--hi:#ffe27a;--hiInk:#1a1814;--red:#b3261e;--ok:#1d7a46;--shadow:rgba(0,0,0,.25);--line:#b9ae95;--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif;--body:"Libre Baskerville",Georgia,serif;color-scheme:light}
 html[data-mode=navy]{--paper:#121b2e;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--btn:#c9a961;--btnInk:#121b2e;--hiInk:#121b2e;--red:#ff8a7a;--ok:#7fd6a3;--shadow:#05080f;--line:#3a4a6b;color-scheme:dark}
 *{box-sizing:border-box}html,body{height:100%;margin:0;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
 body{background:var(--paper);color:var(--ink);font:500 16px/1.35 var(--sans)}
 button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
-#hubBar,#coverHub{font:800 13px/1.2 var(--sans);letter-spacing:.06em;color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:5px 10px;text-decoration:none;white-space:nowrap}#hubBar{flex:none;align-self:flex-start}#hubBar[hidden],#coverHub[hidden]{display:none}
+#coverHub{font:800 13px/1.2 var(--sans);letter-spacing:.06em;color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:5px 10px;text-decoration:none;white-space:nowrap}#coverHub[hidden]{display:none}
 #app{max-width:480px;margin:0 auto;height:100%;height:100dvh;display:flex;flex-direction:column;gap:6px;padding-block:calc(env(safe-area-inset-top,0px) + 6px) calc(env(safe-area-inset-bottom,0px) + 10px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:3px double var(--ink);padding-bottom:5px}
 #pno b{display:block;font:900 20px/1 var(--head)}#pno small{font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
@@ -48,7 +48,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 .set{display:grid;gap:5px;border-top:1px solid var(--ink);padding-top:8px}.set h3{margin:0;text-align:center;font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}.set small{text-align:center;font-size:11px;color:var(--fade)}
 .seg{display:flex;gap:6px}.seg button{flex:1;padding:9px 4px;border:2px solid var(--ink);border-radius:3px;background:var(--card);font:800 12px var(--sans);text-transform:uppercase}.seg button.sel{background:var(--ink);color:var(--paper)}
 #cover{background:var(--paper);z-index:30}#cover .in{width:100%;max-width:340px;margin:auto;display:grid;gap:12px;text-align:center;justify-items:stretch}
-/* The cover's button sits exactly where the in-game one does. */
+/* The yellow button shows on the cover only. During play the way back is the menu row. */
 #coverHub{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:calc(max(0px,(100vw - 480px)/2) + max(16px,env(safe-area-inset-left,0px)))}#cover.hub{padding-top:calc(env(safe-area-inset-top,0px) + 42px)}
 .ver.smhome{color:var(--ink2)}.smhome a{color:inherit;padding:6px 2px}
 .mh{border-top:3px double var(--ink);border-bottom:3px double var(--ink);padding:8px 0}.mh h1{font:900 clamp(38px,12vw,50px)/1 var(--head);margin:0}.mh div{display:flex;justify-content:space-between;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;color:var(--ink2)}
@@ -79,7 +79,6 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener('dblclick',function(e){e.preventDefault()},{passive:false});</script>
 
 <div id="app">
-  <a id="hubBar" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
   <div class="top"><div id="pno"><b id="noLabel">No. 1</b><small id="dateLabel"></small></div><div class="rt"><div class="box">Train<b id="stop">1/3</b></div><button id="menuBtn" aria-label="Menu">☰</button></div></div>
   <div id="scw"><canvas id="sc" role="img" aria-label="A train running past the stops on your route."></canvas><div class="ct" id="c1"><small>Aboard</small><b id="st"></b></div><div class="ct" id="c2"><small>Needs</small><b id="tg"></b></div></div>
   <div id="bd"></div>
@@ -135,7 +134,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>
 /*PUZZLE*/
 (function(){
-var VERSION='1.13',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.14',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -193,7 +192,7 @@ function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}v
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
 ['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='Trackulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
-if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('hubBar').hidden=false;[$('coverHub'),$('hubBar')].forEach(function(a){a.onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}})}
+if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('coverHub').onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}}
 dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
 window.__tk=function(){return {p:p,RUN:RUN,sel:sel,DEMO:DEMO,share:RUN&&RUN.over?share():'',sfx:function(){return Object.keys(SFX).map(function(k){try{ctx();SFX[k](1);return ''}catch(e){return k+':'+e.message}}).join('')},G:G,set:function(a){sel=a.slice();allOn(1);reset();goReady()}}};

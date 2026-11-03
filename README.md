@@ -24,3 +24,6 @@ The board opens with no route picked. Tap one stop in every row, then Depart. Fi
 
 ## v1.13 (Nov 3)
 One way home, same in every daily game: the yellow ‹ smAisle Daily button sits at the top left in the same spot on the cover and in the game, and smAisle Home is one small line next to the version at the bottom of the cover.
+
+## v1.14 (Nov 3)
+The yellow ‹ smAisle Daily button shows on the cover only, never during play. In the game the way back is the ‹ smAisle Daily row in the menu.
