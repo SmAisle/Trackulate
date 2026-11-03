@@ -18,3 +18,6 @@ New train whistle (Jeff picked Deeper B) at Depart and at the station.
 
 ## v1.3 (Nov 2)
 Easier-to-read stops: bold plain numbers, all one size (Jeff picked B).
+
+## v1.4 (Nov 3)
+The board opens with no route picked. Tap one stop in every row, then Depart. First-time players are offered the demo.

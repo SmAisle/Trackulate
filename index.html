@@ -59,6 +59,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 .dt{grid-column:1/-1;display:flex;justify-content:space-between;font:800 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}#demoSkip{background:none;border:0;padding:0 0 0 8px;font:inherit;color:inherit;text-decoration:underline}#demoText{margin:0;font:500 14px/1.3 var(--sans);min-height:54px}#demoNext{height:40px;border:2px solid var(--ink);border-radius:3px;background:var(--hi);color:var(--hiInk);font:800 14px var(--sans)}#demoNext:disabled{opacity:.4}
 [hidden]{display:none!important}
 @media (max-height:700px){.tk b{font-size:21px}#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
+.go:disabled{opacity:.4}
 </style>
 </head>
 <body>
@@ -96,7 +97,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 </div></div>
 
 <div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
-  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap stops to pick a <b>route</b>. Each stop you pass through changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b>. Everyone gets the same board each day.</li></ol>
+  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap one stop in every row to build a <b>route</b>. Each stop changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b>. Everyone gets the same board each day.</li></ol>
   <button class="go" id="helpDemo">Watch the demo</button><div class="ver" id="helpVer"></div></div></div>
 
 <div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
@@ -119,6 +120,8 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 
 <div class="sheet" id="gate" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">That was your free train</h2><p style="margin:0">Get two more trains today, plus the Archive, with smAisle Daily Plus.</p><button class="go" id="gateBuy" style="text-transform:none;letter-spacing:.02em">Get smAisle Daily Plus</button><button class="go y" id="gateHub">‹ smAisle Daily</button><div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
 
+<div class="sheet" id="offer" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">First time here?</h2><p style="margin:0">Want a quick demo?</p><button class="go" id="ofYes">Show me</button><button class="go alt" id="ofNo">Skip</button></div></div>
+
 <div id="demoBlock" hidden></div>
 <div id="demoBar" hidden><div class="dt"><span id="demoStep">Demo</span><button id="demoSkip">Skip</button></div><p id="demoText"></p><button id="demoNext">Next</button></div>
 
@@ -137,7 +140,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.3',VDATE='Nov 2',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.4',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -209,7 +212,7 @@ function part(s0,f,i){var q=at(s0),a=at(s0+7),b=at(s0-7),A=pr(a[0],a[1]),B=pr(b[
 
 var ENDZ=570,GATEZ=429,gate=0,CH=[],PATH,LEN,POS=0,START=66,smoke=[],crash=-1,num=null,boom=null,STOP=[],pop='',anim=null,last=0,dirty=true,busy=false,locked=false,p=null,sel=null,DAY=TODAY,PAST=false,RUN=null,DEMO=null;
 var skey=function(d){return 'tk-d_'+d};
-function frame(){x.setTransform(cv.width/VW,0,0,cv.height/VH,0,0);ground();var r=sel,on={};for(var q0=0;q0<7;q0++)on[q0+','+r[q0]+','+r[q0+1]]=1;on['7,'+r[7]+',0']=1;var stops={'8,0':1};for(q0=1;q0<=7;q0++)stops[q0+','+r[q0]]=1;
+function frame(){x.setTransform(cv.width/VW,0,0,cv.height/VH,0,0);ground();var r=sel,on={},lit=function(l){return l===0||PK[l]};for(var q0=0;q0<7;q0++)if(lit(q0)&&lit(q0+1))on[q0+','+r[q0]+','+r[q0+1]]=1;if(lit(7))on['7,'+r[7]+',0']=1;var stops={'8,0':1};for(q0=1;q0<=7;q0++)if(PK[q0])stops[q0+','+r[q0]]=1;
  TR.slice(0,8).forEach(function(t){tree(t[0],t[1])});
  for(var l=0;l<8;l++)for(var i=0;i<W[l];i++)kids(l,i).forEach(function(j){var k=l+','+i+','+j;if(!on[k])rail([nx(l,i),nz(l)],[nx(l+1,j),nz(l+1)],false)});
  for(l=0;l<8;l++)for(i=0;i<W[l];i++)kids(l,i).forEach(function(j){var k=l+','+i+','+j;if(on[k])rail([nx(l,i),nz(l)],[nx(l+1,j),nz(l+1)],true)});rail([0,-60],[0,nz(0)],true);rail([0,nz(8)],[0,ENDZ],true);
@@ -223,13 +226,14 @@ function size(){var b=$('mapBox').getBoundingClientRect();if(!b.width||!b.height
 addEventListener('resize',size);
 function loop(t){var dt=Math.min(.05,(t-last)/1000||0);last=t;if(anim)anim(dt);smoke.forEach(function(s){s.x+=s.vx*dt;s.y+=s.vy*dt;s.r+=dt*8;s.a-=dt*.75});smoke=smoke.filter(function(s){return s.a>0});if(crash>=0&&crash<2)crash+=dt;if(sel&&(anim||smoke.length||(crash>=0&&crash<2)||dirty)){frame();dirty=false}requestAnimationFrame(loop)}
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){dirty=true});
-cv.addEventListener('click',function(e){if(busy||locked||DEMO)return;var r=cv.getBoundingClientRect(),X=(e.clientX-r.left)/r.width*VW,Y=(e.clientY-r.top)/r.height*VH,h=null;CH.forEach(function(c){var b=c.box;if(b&&X>=b[0]&&X<=b[0]+b[2]&&Y>=b[1]&&Y<=b[1]+b[3])h=c});if(!h||h.l===8)return;if($('go').textContent==='Next train'){$('go').textContent='Depart';say('Change your route, then depart.');reset()}pickStop(h.l,h.i);play('thrown');mkPath();POS=START;dirty=true});
+cv.addEventListener('click',function(e){if(busy||locked||DEMO)return;var r=cv.getBoundingClientRect(),X=(e.clientX-r.left)/r.width*VW,Y=(e.clientY-r.top)/r.height*VH,h=null;CH.forEach(function(c){var b=c.box;if(b&&X>=b[0]&&X<=b[0]+b[2]&&Y>=b[1]&&Y<=b[1]+b[3])h=c});if(!h||h.l===8)return;if($('go').textContent==='Next train'){$('go').textContent='Depart';say('Change your route, then depart.');reset()}var old=sel.slice();pickStop(h.l,h.i);PK[h.l]=1;for(var q=1;q<=7;q++)if(q!==h.l&&sel[q]!==old[q])PK[q]=0;play('thrown');mkPath();POS=START;goReady();dirty=true});
+var PK={};function allOn(v){PK={};for(var q=1;q<=7;q++)PK[q]=v}function goReady(){if($('go').textContent==='Depart')$('go').disabled=!Object.keys(PK).every(function(k){return PK[k]})&&Object.keys(PK).length>0||Object.keys(PK).length===0}
 function say(t,c){$('msg').textContent=t;$('msg').className=c||''}
 function trainBox(){$('stop').textContent=(RUN&&RUN.over?RUN.n:Math.min(MAXT,(RUN?RUN.n:0)+1))+'/'+MAXT}
 function reset(){gate=0;anim=null;crash=-1;boom=null;num=null;pop='';smoke=[];mkPath();POS=START;$('st').textContent=p.start;dirty=true}
-function setup(d){DAY=d;PAST=d!==TODAY;p=makePuzzle(dayNo(d));sel=firstRoute();RUN=store.json(skey(d),null);busy=false;locked=false;reset();$('tg').textContent=p.target;$('noLabel').textContent='No. '+dayNo(d);$('dateLabel').textContent=nice(d,{weekday:'short',month:'short',day:'numeric'});$('go').disabled=false;trainBox();
- if(RUN&&RUN.over){locked=true;if(RUN.win||1)sel=p.sol.slice();reset();$('st').textContent=p.target;say(RUN.win?'Exact! The route that made it.':'Here’s the route that was exact.',RUN.win?'good':'');$('go').textContent='See results';return}
- $('go').textContent='Depart';say(RUN&&RUN.n?'You have '+(MAXT-RUN.n)+' train'+(MAXT-RUN.n===1?'':'s')+' left. Change your route, then depart.':'Tap a stop to route the train through it. End with exactly the right number of passengers.')}
+function setup(d){DAY=d;PAST=d!==TODAY;p=makePuzzle(dayNo(d));sel=firstRoute();allOn(0);RUN=store.json(skey(d),null);busy=false;locked=false;reset();$('tg').textContent=p.target;$('noLabel').textContent='No. '+dayNo(d);$('dateLabel').textContent=nice(d,{weekday:'short',month:'short',day:'numeric'});$('go').disabled=false;trainBox();
+ if(RUN&&RUN.over){locked=true;allOn(1);if(RUN.win||1)sel=p.sol.slice();reset();$('st').textContent=p.target;say(RUN.win?'Exact! The route that made it.':'Here’s the route that was exact.',RUN.win?'good':'');$('go').textContent='See results';return}
+ $('go').textContent='Depart';goReady();say(RUN&&RUN.n?'You have '+(MAXT-RUN.n)+' train'+(MAXT-RUN.n===1?'':'s')+' left. Change your route, then depart.':'Tap one stop in every row to build your route. End with exactly the right number of passengers.')}
 function depart(){busy=true;$('go').disabled=true;reset();play('whistle');if(!DEMO&&!PAST&&!(RUN&&RUN.n))checkIn('play');var v=p.start,seg=2,sp=0,chg=0,cn=0,sm=0,hold=0,MAX=108,gs=STOP[9]+2,end=LEN[LEN.length-1],tick=false;num=v;say('');
  function fail(why){play('crash');crash=0;var q=at(POS),c=pr(q[0],q[1]);boom=[Math.min(270,Math.max(80,c.x-20)),Math.min(392,c.y-32)];for(var i=0;i<18;i++)smoke.push({x:c.x+Math.random()*50-25,y:c.y-Math.random()*22,r:4+Math.random()*7,a:1,vx:(Math.random()-.5)*44,vy:-12-Math.random()*26,c:'#8c8574'});anim=null;busy=false;$('go').disabled=false;if(DEMO){DEMO.done=1;say('Derailed! '+why,'badt');return}
   RUN=RUN||{n:0};RUN.n++;store.put(skey(DAY),RUN);trainBox();if(RUN.n>=MAXT){say('Derailed! '+why,'badt');locked=true;$('go').disabled=true;record(false);return}
@@ -240,7 +244,7 @@ function depart(){busy=true;$('go').disabled=true;reset();play('whistle');if(!DE
   if(seg>9&&!right&&POS>=gs)return fail('You reached the crossing with '+v+' passengers. It only opens for '+p.target+'.');
   if(POS>=end){anim=null;busy=false;play('hiss');play('whistle');setTimeout(function(){play('clear')},2300);if(DEMO){DEMO.done=1;say('Exact! '+v+' passengers, gate up.','good');return}RUN=RUN||{n:0};RUN.n++;store.put(skey(DAY),RUN);say('Exact! '+v+' passengers, gate up'+(RUN.n===1?', first train.':', on train '+RUN.n+'.'),'good');locked=true;record(true)}}}
 /* results: one board a day; Archive boards count but are marked late */
-function record(win){RUN.over=1;RUN.win=win?1:0;store.put(skey(DAY),RUN);trainBox();var h=store.json('tk-hist',{});if(!h[DAY]){h[DAY]={n:RUN.n,w:RUN.win};if(PAST)h[DAY].late=1;store.put('tk-hist',h)}if(!PAST){markDone();checkIn('done')}if(!win){setTimeout(function(){sel=p.sol.slice();reset();$('st').textContent=p.target;say('Here’s the route that was exact.')},2000)}$('go').textContent='See results';setTimeout(function(){$('go').disabled=false;showDone()},2600)}
+function record(win){RUN.over=1;RUN.win=win?1:0;store.put(skey(DAY),RUN);trainBox();var h=store.json('tk-hist',{});if(!h[DAY]){h[DAY]={n:RUN.n,w:RUN.win};if(PAST)h[DAY].late=1;store.put('tk-hist',h)}if(!PAST){markDone();checkIn('done')}if(!win){setTimeout(function(){allOn(1);sel=p.sol.slice();reset();$('st').textContent=p.target;say('Here’s the route that was exact.')},2000)}$('go').textContent='See results';setTimeout(function(){$('go').disabled=false;showDone()},2600)}
 function markDone(){try{var s=store.json('smaisle_done',{})||{},d=new Date(),day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');s[day]=s[day]||[];if(s[day].indexOf('tk')<0)s[day].push('tk');var k=Object.keys(s).sort();while(k.length>60)delete s[k.shift()];store.put('smaisle_done',s)}catch(e){}}
 function statsOf(){var h=store.json('tk-hist',{}),V=Object.values(h),n=dayNo(TODAY),run=0,max=0;for(var i=1;i<=n;i++){var r=h[dateOf(i)];if(r&&!r.late){run++;max=Math.max(max,run)}else if(i<n)run=0}var W2=V.filter(function(v){return v.w});return {played:V.length,wins:W2.length,first:W2.filter(function(v){return v.n===1}).length,cur:run,max:max}}
 function grid(){var s='';for(var i=0;i<RUN.n-(RUN.win?1:0);i++)s+='💥';return s+(RUN.win?'✅':'')}
@@ -255,7 +259,7 @@ function checkIn(kind){if(!store.get(TERMS,''))return;var u=store.json('tk-usage
  var body={fields:{first:T(u.first),last:T(day),days:I(u.days),v:T(VERSION),opens:I(u.opens),plays:I(u.plays),done:I(st.played),wins:I(st.wins),firsts:I(st.first),streak:I(st.cur),best:I(st.max),terms:T(store.get(TERMS,'').slice(0,10)),desk:{booleanValue:innerWidth>=820},code:T(inviteCode()),t:I(Date.now()),o:Mp(u.o),p:Mp(u.p),r:Mp(u.r)}};
  if(window.TK_TEST){window.__body=body;return}
  try{fetch('https://firestore.googleapis.com/v1/projects/'+FB_PROJ+'/databases/(default)/documents/'+GAME+'_devices/'+devId()+'?key='+FB_KEY,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),keepalive:true}).catch(function(){})}catch(e){}}
-function goBtn(){if(busy)return;var lb=$('go').textContent;if(lb==='See results')return showDone();if(PREVIEW()&&!PAST&&RUN&&RUN.n>=1){only('gate');loadMore();return}if(lb==='Next train'){$('go').textContent='Depart';say('Change your route, then depart.');reset();return}depart()}
+function goBtn(){if(busy)return;var lb=$('go').textContent;if(lb==='See results')return showDone();if(PREVIEW()&&!PAST&&RUN&&RUN.n>=1){only('gate');loadMore();return}if(lb==='Next train'){$('go').textContent='Depart';say('Change your route, then depart.');reset();goReady();return}depart()}
 $('go').onclick=goBtn;
 /* cover picture: the train heading for the crossing */
 function art(){var c=$('cvArt'),r=c.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);if(!r.width)return;c.width=r.width*d;c.height=r.height*d;var sx=x;x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);var w=r.width,h=r.height,y=h*.62,i;x.fillStyle='#f4efe1';x.fillRect(0,0,w,h);x.strokeStyle='rgba(26,24,20,.12)';x.lineWidth=.6;for(i=8;i<h;i+=7){x.beginPath();x.moveTo(0,i);x.lineTo(w,i);x.stroke()}
@@ -269,7 +273,7 @@ function closeAll(){only('')}
 document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){b.closest('.sheet').hidden=true;if(back==='cover')cover()}});
 function cover(){stopDemo();only('cover');var r=store.json(skey(TODAY),null);$('cvDate').textContent=nice(TODAY,{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('cvNo').textContent='Board No. '+dayNo(TODAY);$('coverGo').textContent=r?'See today’s results':'Play today’s board';var s=statsOf();$('cvStats').hidden=!s.played;if(s.played)$('cvStats').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.cur,'Streak'],[s.max,'Best']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');art()}
 function start(d){stopDemo();TODAY=todayStr();closeAll();size();setup(d);frame();if(RUN&&RUN.over)setTimeout(showDone,200)}
-$('coverGo').onclick=function(){start(TODAY);if(!RUN)checkIn('open')};
+$('coverGo').onclick=function(){if(!store.get('tk-offer','')&&!store.json(skey(TODAY),null)){store.set('tk-offer','1');only('offer');return}start(TODAY);if(!RUN)checkIn('open')};$('ofYes').onclick=startDemo;$('ofNo').onclick=function(){start(TODAY);if(!RUN)checkIn('open')};
 $('coverHow').onclick=$('mHow').onclick=function(){only('help')};
 function arch(){var h=store.json('tk-hist',{}),n=dayNo(TODAY),o='';for(var i=n;i>=1;i--){var d=dateOf(i),r=h[d];o+='<button data-d="'+d+'"><span>No. '+i+' · '+nice(d,{month:'short',day:'numeric'})+(i===n?' · Today':'')+'</span><span>'+(r?(r.w?'Train '+r.n:'Derailed')+(r.late?' · late':''):'Play')+'</span></button>'}$('pastList').innerHTML=o;$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){start(b.dataset.d)}});only('past')}
 $('coverPast').onclick=$('mPast').onclick=$('dPast').onclick=arch;
@@ -290,9 +294,9 @@ function dark(){var d=store.get('smaisle-dark','off');if(d!=='on'&&d!=='auto')d=
 darkQ.addEventListener&&darkQ.addEventListener('change',dark);document.querySelectorAll('#segDark button').forEach(function(b){b.onclick=function(){store.set('smaisle-dark',b.dataset.v);dark()}});
 function snd(){document.querySelectorAll('#segSound button').forEach(function(b){b.classList.toggle('sel',b.dataset.v===store.get('tk-sound','on'))})}document.querySelectorAll('#segSound button').forEach(function(b){b.onclick=function(){store.set('tk-sound',b.dataset.v);snd()}});
 /* demo: a guided walkthrough on one fixed board. Tap Next at each step. */
-var DP=makePuzzle(1),DS=[{t:function(){return 'The train starts with <b>'+DP.start+' passengers</b>. The station needs exactly <b>'+DP.target+'</b>.'}},{r:function(){pickStop(1,1);mkPath();POS=START;dirty=true;play('thrown')},t:function(){return 'Tap a stop to send the train through it. <b>Yellow</b> shows your route.'}},{r:function(){depart()},w:function(){return DEMO.done&&crash>.7},t:function(){return 'Every stop changes the count. Wrong count at the crossing: <b>derailed</b>.'}},{r:function(){DEMO.done=0;sel=DP.sol.slice();reset();say('')},t:function(){return 'You get <b>3 trains</b> to find a better route. Let’s try this one.'}},{r:function(){depart()},w:function(){return DEMO.done},t:function(){return 'Exact! The gate lifts and the train reaches the station.'}},{t:function(){return 'Same board for everyone each day. Good luck!'}}];
+var DP=makePuzzle(1),DS=[{t:function(){return 'The train starts with <b>'+DP.start+' passengers</b>. The station needs exactly <b>'+DP.target+'</b>.'}},{r:function(){pickStop(1,1);mkPath();POS=START;dirty=true;play('thrown')},t:function(){return 'Tap a stop to send the train through it. <b>Yellow</b> shows your route.'}},{r:function(){depart()},w:function(){return DEMO.done&&crash>.7},t:function(){return 'Every stop changes the count. Wrong count at the crossing: <b>derailed</b>.'}},{r:function(){DEMO.done=0;sel=DP.sol.slice();allOn(1);reset();say('')},t:function(){return 'You get <b>3 trains</b> to find a better route. Let’s try this one.'}},{r:function(){depart()},w:function(){return DEMO.done},t:function(){return 'Exact! The gate lifts and the train reaches the station.'}},{t:function(){return 'Same board for everyone each day. Good luck!'}}];
 function stopDemo(){if(!DEMO)return;DEMO=null;anim=null;busy=false;$('demoBar').hidden=true;$('demoBlock').hidden=true}
-function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;sel=firstRoute();reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
+function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;sel=firstRoute();allOn(1);reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
 function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}var s=DS[DEMO.i];$('demoStep').textContent='Demo · '+(DEMO.i+1)+' of '+DS.length;$('demoNext').disabled=true;$('demoNext').textContent=DEMO.i===DS.length-1?'Done':'Next';if(s.r)s.r();var wait=function(){if(!DEMO)return;if(!s.w||s.w()){$('demoText').innerHTML=s.t();$('demoNext').disabled=false}else setTimeout(wait,150)};setTimeout(wait,s.r?400:60)}
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
