@@ -27,3 +27,6 @@ One way home, same in every daily game: the yellow ‹ smAisle Daily button sits
 
 ## v1.14 (Nov 3)
 The yellow ‹ smAisle Daily button shows on the cover only, never during play. In the game the way back is the ‹ smAisle Daily row in the menu.
+
+## v1.15 (Nov 3)
+Same menu as Straight Down Spell: Back to game; a grid of Archive, Stats, How to Play, plus a Plus row that shows only without Plus and opens the Plus offer; Home Screen beside the yellow smAisle Daily; Settings; the version. The demo is in How to Play.

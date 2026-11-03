@@ -57,7 +57,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 .past{display:grid;gap:6px;max-height:62vh;overflow:auto}.past button{display:flex;justify-content:space-between;gap:8px;padding:10px;background:var(--card);border:2px solid var(--ink);border-radius:3px;font:700 14px var(--sans);text-align:left}
 .big{font:900 46px/1 var(--head);text-align:center}.dgrid{text-align:center;font-size:21px;letter-spacing:2px}
 .more{display:grid;gap:5px}.more h3{margin:0;font:800 11px var(--sans);text-align:center;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.moreRow{display:flex;gap:8px;overflow-x:auto;padding:2px}.moreRow a{flex:0 0 60px;font:700 10px/1.15 var(--sans);text-align:center;color:var(--ink);text-decoration:none}.moreRow img{display:block;width:50px;height:50px;margin:0 auto 3px;border:1.5px solid var(--ink);border-radius:12px}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row2 .go{padding:11px 4px;font-size:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row2 .go{padding:11px 4px;font-size:13px}.mgrid .go{font-size:12px;white-space:nowrap}.mgrid[hidden]{display:none}
 #demoBlock{position:fixed;inset:0;z-index:24}#demoBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);transform:translateX(-50%);z-index:25;width:min(calc(100% - 20px),460px);background:var(--card);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--shadow);padding:7px 10px;display:grid;grid-template-columns:minmax(0,1fr) 78px;gap:3px 10px;align-items:center}
 .dt{grid-column:1/-1;display:flex;justify-content:space-between;font:800 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}#demoSkip{background:none;border:0;padding:0 0 0 8px;font:inherit;color:inherit;text-decoration:underline}#demoText{margin:0;font:500 14px/1.3 var(--sans);min-height:54px}#demoNext{height:40px;border:2px solid var(--ink);border-radius:3px;background:var(--hi);color:var(--hiInk);font:800 14px var(--sans)}#demoNext:disabled{opacity:.4}
 [hidden]{display:none!important}
@@ -103,12 +103,15 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <button class="go" id="helpDemo">Watch the demo</button><div class="ver" id="helpVer"></div></div></div>
 
 <div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
-  <button class="go" id="mBack">Back to the game</button><button class="go alt" id="mHow">How to Play</button><button class="go alt" id="mPast">Archive</button><button class="go alt" id="mStats">Stats</button><button class="go y" id="mHub" hidden>‹ smAisle Daily</button><button class="go alt" id="mSet">Settings</button><div class="ver" id="mVer"></div></div></div>
+  <button class="go" id="mBack">Back to game</button>
+  <div class="row2 mgrid"><button class="go alt" id="mPast">Archive</button><button class="go alt" id="mStats">Stats</button><button class="go alt" id="mHow">How to Play</button><button class="go alt" id="mPlus" hidden>Plus</button></div>
+  <div class="row2 mgrid"><button class="go alt" id="mFront">Home Screen</button><button class="go y" id="mHub" hidden>‹ smAisle Daily</button></div>
+  <button class="go alt" id="mSet">Settings</button><div class="ver" id="mVer"></div></div></div>
 
 <div class="sheet" id="settings" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Settings</h2>
   <div class="set"><h3>Sound</h3><div class="seg" id="segSound"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
   <div class="set"><h3>Dark mode</h3><div class="seg" id="segDark"><button data-v="off">Off</button><button data-v="on">On</button><button data-v="auto">Match phone</button></div><small>On uses Navy. Match phone switches with your phone.</small></div>
-  <div class="mlinks"><button id="mFront">Front page</button><button id="mTerms">Terms</button><button id="mSm">See our other games ›</button></div>
+  <div class="mlinks"><button id="mTerms">Terms</button><button id="mSm">See our other games ›</button></div>
   <button class="go" id="setBack">Back to the menu</button></div></div>
 
 <div class="sheet" id="past" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Archive</h2><div class="past" id="pastList"></div></div></div>
@@ -121,7 +124,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <button class="go alt" id="dBoard">See the track</button><div class="ver" id="dNext"></div>
   <div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
 
-<div class="sheet" id="gate" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">That was your free train</h2><p style="margin:0">Get two more trains today, plus the Archive, with smAisle Daily Plus.</p><button class="go" id="gateBuy" style="text-transform:none;letter-spacing:.02em">Get smAisle Daily Plus</button><button class="go y" id="gateHub">‹ smAisle Daily</button><div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
+<div class="sheet" id="gate" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0" id="gateH">That was your free train</h2><p style="margin:0">Get two more trains today, plus the Archive, with smAisle Daily Plus.</p><button class="go" id="gateBuy" style="text-transform:none;letter-spacing:.02em">Get smAisle Daily Plus</button><button class="go y" id="gateHub">‹ smAisle Daily</button><button class="go alt" id="gateBack" hidden>Back to the menu</button><div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
 
 <div class="sheet" id="offer" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">First time here?</h2><p style="margin:0">Want a quick demo?</p><button class="go" id="ofYes">Show me</button><button class="go alt" id="ofNo">Skip</button></div></div>
 
@@ -143,7 +146,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.14',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.15',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -279,10 +282,12 @@ function arch(){var h=store.json('tk-hist',{}),n=dayNo(TODAY),o='';for(var i=n;i
 $('coverPast').onclick=$('mPast').onclick=$('dPast').onclick=arch;
 function stats(){var s=statsOf();$('statgrid').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.played?Math.round(s.wins/s.played*100)+'%':'–','Exact %'],[s.cur,'Streak'],[s.max,'Best streak'],[s.first,'First train']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');only('stats')}
 $('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
-$('menuBtn').onclick=function(){only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};$('dBoard').onclick=closeAll;
+function mFit(){[].forEach.call(document.querySelectorAll('#menu .mgrid'),function(g){var v=[].filter.call(g.children,function(x){return !x.hidden});g.hidden=!v.length;v.forEach(function(x,i){x.style.gridColumn=v.length%2&&i===v.length-1?'1/-1':''})})}
+$('menuBtn').onclick=function(){mFit();only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};$('dBoard').onclick=closeAll;
 function goHub(){if(window.DG_APP)return toApp({cmd:'home'});location.href='https://smaisle.app/daily/'}
 $('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=goHub;
 $('mSm').onclick=$('cvHome').onclick=function(e){e.preventDefault();if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
+$('mPlus').onclick=function(){$('gateH').textContent='smAisle Daily Plus';$('gateBack').hidden=false;only('gate');loadMore()};$('gateBack').onclick=function(){$('gateH').textContent='That was your free train';$('gateBack').hidden=true;mFit();only('menu')};
 $('gateBuy').onclick=function(){if(window.DG_APP)toApp({cmd:'plus'});else location.href='https://smaisle.app/daily/#plus'};
 $('dShare').onclick=function(){var t=share(),b=$('dShare');try{if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({text:t}).catch(function(){});return}}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Share'},1500)},function(){})};
 $('termsGo').onclick=function(){var first=!store.get(TERMS,'');store.set(TERMS,TODAY);if(first)checkIn('open');if(!first&&sel)closeAll();else cover()};
@@ -299,7 +304,7 @@ function stopDemo(){if(!DEMO)return;DEMO=null;anim=null;busy=false;$('demoBar').
 function startDemo(){stopDemo();closeAll();size();DEMO={i:-1,done:0};p=DP;DAY=TODAY;PAST=true;RUN=null;locked=true;FREE=false;sel=firstRoute();allOn(1);reset();$('tg').textContent=p.target;$('noLabel').textContent='Demo';$('dateLabel').textContent='';$('go').textContent='Depart';say('');$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
 function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}var s=DS[DEMO.i];$('demoStep').textContent='Demo · '+(DEMO.i+1)+' of '+DS.length;$('demoNext').disabled=true;$('demoNext').textContent=DEMO.i===DS.length-1?'Done':'Next';if(s.r)s.r();var wait=function(){if(!DEMO)return;if(!s.w||s.w()){$('demoText').innerHTML=s.t();$('demoNext').disabled=false}else setTimeout(wait,150)};setTimeout(wait,s.r?400:60)}
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
-function previewUI(){var pv=PREVIEW();['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
+function previewUI(){var pv=PREVIEW();$('mPlus').hidden=!pv;['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
 ['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='Trackulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
 if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('coverHub').onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}}
 dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
