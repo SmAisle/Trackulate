@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Track Record Test</title><meta name="theme-color" content="#f4efe1">
+<title>CalcRU-Late</title><meta name="theme-color" content="#f4efe1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Playfair+Display:wght@900&display=swap">
 <style>
 :root{--paper:#f4efe1;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--hi:#ffe27a;--gold:#c9a961;--red:#b3261e;--ok:#1d7a46;--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif}
@@ -77,7 +77,7 @@ input[type=range]::-moz-range-thumb{width:28px;height:38px;background:var(--ink)
 </style></head><body>
 <div id="app"><div class="top"><div class="mh"><b id="no"></b><small id="dt"></small></div><span id="tn"></span></div><div id="board"></div><div class="tix"><div class="n"><div><small>Stars</small><b class="sr" id="stars"></b></div><div><small>Train</small><b id="tc"></b></div></div><p id="msg"></p></div><div id="body"></div>
 </div>
-<div id="cv"><div class="cm"><h1>Track Record</h1><div class="cd"><span id="cvD"></span><span id="cvN"></span></div><p>Set the lever. Leave on time. Arrive on the dot.</p><canvas id="cvT"></canvas><button class="go" id="cvP">Play today's trains</button><div class="lnks"><button id="cvH">How to Play</button><button id="cvN2">New trains</button></div></div><div class="cf"><a href="https://smaisle.app/">smAisle Home</a> · v0.13 · Nov 3 · test</div></div>
+<div id="cv"><div class="cm"><h1>CalcRU-Late</h1><div class="cd"><span id="cvD"></span><span id="cvN"></span></div><p>Set the lever. Leave on time. Arrive on the dot.</p><canvas id="cvT"></canvas><button class="go" id="cvP">Play today's trains</button><div class="lnks"><button id="cvH">How to Play</button><button id="cvN2">New trains</button></div></div><div class="cf"><a href="https://smaisle.app/">smAisle Home</a> · v0.13 · Nov 3 · test</div></div>
 <div class="ov" id="hp"><div class="card"><h2>How to Play</h2><ul><li>Five trains. The board shows the trip and how far it is.</li><li>Set the <b>lever</b> so your train arrives exactly on time, then tap <b>All Aboard</b>.</li><li>Miles ÷ speed = hours on the rails. Later trains add a twist, so read the ticket.</li><li>Dead on time is 3 stars. Within 15 minutes is 2. Within an hour is 1.</li><li>Each train gets 2 tries. Your best try counts.</li></ul><button class="go" id="hpC" style="margin-top:12px">Got it</button></div></div>
 <div id="turn">Turn your phone upright to play</div>
 <script>
@@ -130,7 +130,7 @@ function smAwake(){if(smAC&&smAway){try{smAC.close()}catch(e){}smAC=null}smAway=
 document.addEventListener('visibilitychange',function(){if(document.hidden)smAway=true});addEventListener('pagehide',function(){smAway=true});addEventListener('pageshow',function(e){if(e.persisted)smAway=true});
 ['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
 ['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});
-/* sounds Jeff picked from the Track Record sound board */
+/* sounds Jeff picked from the CalcRU-Late sound board */
 var M=null,NB=null;function sc(){var c=getAC();if(c&&c!==sc.c){sc.c=c;M=c.createGain();M.gain.value=.9;var k=c.createDynamicsCompressor();M.connect(k);k.connect(c.destination);NB=null}return c}
 function sf(fn){try{if(sc())fn()}catch(e){}}
 function env(g,t,a,d,v){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+a);g.gain.setValueAtTime(v,t+Math.max(a,d*.7));g.gain.exponentialRampToValueAtTime(.0001,t+d)}
@@ -158,7 +158,7 @@ function done(lv,sp,total){tries++;var diff=Math.round(lv+total+T.tz-T.ar),a=Mat
  var last=tries>=2||a===0,lb=i>=4?'SEE RESULTS':'NEXT TRAIN',ex=a&&!last?'That was '+dur(total)+' from start to finish.'+(T.zn?' '+T.zn:''):T.ex(sp);
  $('body').innerHTML='<div class="res '+(a?'bad':'ok')+'">'+(a?dur(a)+' '+(diff<0?'early':'late'):'Right on time!')+'</div><div class="ex">'+ex+'</div>'+(last?'':'<button class="go alt" id="ag">Try again</button>')+'<button class="go" id="nx">'+lb+'</button>';if(a)miss();else win();
  if($('ag'))$('ag').onclick=setup;$('nx').onclick=function(){tries=0;i++;if(i>=5)fin();else setup()}}
-function fin(){fanfare();var t=stars.reduce(function(a,b){return a+(b||0)},0);$('tn').textContent='Done';$('tc').textContent='5/5';msg(t>=13?'Best conductor on the line.':t>=8?'Mostly on schedule.':'The station master wants a word.');board([ln('LAST TRAIN'),ln('ALL IN','g')]);$('body').innerHTML='<div class="rc"><h2>smAisle</h2><div class="sub">Track Record · '+$('dt').textContent+'</div>'+TN.map(function(x,k){var s=stars[k]||0;return '<div class="rl"><span>'+x.a+' to '+x.b+'</span><i></i><span>'+'★'.repeat(s)+'☆'.repeat(3-s)+'</span></div>'}).join('')+'<div class="rl tot"><span>Total</span><i></i><span>'+t+' of 15</span></div></div>'}
+function fin(){fanfare();var t=stars.reduce(function(a,b){return a+(b||0)},0);$('tn').textContent='Done';$('tc').textContent='5/5';msg(t>=13?'Best conductor on the line.':t>=8?'Mostly on schedule.':'The station master wants a word.');board([ln('LAST TRAIN'),ln('ALL IN','g')]);$('body').innerHTML='<div class="rc"><h2>smAisle</h2><div class="sub">CalcRU-Late · '+$('dt').textContent+'</div>'+TN.map(function(x,k){var s=stars[k]||0;return '<div class="rl"><span>'+x.a+' to '+x.b+'</span><i></i><span>'+'★'.repeat(s)+'☆'.repeat(3-s)+'</span></div>'}).join('')+'<div class="rl tot"><span>Total</span><i></i><span>'+t+' of 15</span></div></div>'}
 var x,G={wheel:0},INK='#1a1814';function NV(){return false}
 function P(f,s,w){if(f){x.fillStyle=f;x.fill()}if(s!==0){x.strokeStyle=INK;x.lineWidth=w||1.8;x.stroke()}}
 function rr(a,b,c,d,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+c,b,a+c,b+d,r);x.arcTo(a+c,b+d,a,b+d,r);x.arcTo(a,b+d,a,b,r);x.arcTo(a,b,a+c,b,r);x.closePath()}
