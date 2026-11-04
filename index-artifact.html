@@ -80,6 +80,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 [hidden]{display:none!important}
 @media (max-height:700px){#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
 .go:disabled{opacity:.4}
+#goRow{display:flex;gap:8px}#goRow .go{flex:1 1 0;min-width:0}#goHub{padding-left:4px;padding-right:4px;font-size:14px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -97,7 +98,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <div id="scw"><canvas id="sc" role="img" aria-label="A train running past the stops on your route."></canvas><div class="ct" id="c1"><small>Aboard</small><b id="st"></b></div><div class="ct" id="c2"><small>Needs</small><b id="tg"></b></div></div>
   <div id="bd"></div>
   <p id="msg"></p>
-  <button class="go" id="go" type="button">Depart</button>
+  <div id="goRow"><button class="go" id="go" type="button">Depart</button><button class="go y" id="goHub" type="button" hidden>‹ smAisle Daily</button></div>
 </div>
 
 <div class="sheet" id="terms" hidden><div class="card"><h2>TRACKulate</h2>
@@ -161,7 +162,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.27',VDATE='Nov 4',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.28',VDATE='Nov 4',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -306,7 +307,10 @@ $('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
 function mFit(){[].forEach.call(document.querySelectorAll('#menu .mgrid'),function(g){var v=[].filter.call(g.children,function(x){return !x.hidden});g.hidden=!v.length;v.forEach(function(x,i){x.style.gridColumn=v.length%2&&i===v.length-1?'1/-1':''})})}
 $('menuBtn').onclick=function(){mFit();only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};$('dBoard').onclick=closeAll;
 function goHub(){if(window.DG_APP)return toApp({cmd:'home'});location.href='https://smaisle.app/daily/'}
-$('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=goHub;
+$('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=$('goHub').onclick=goHub;
+/* finished board: a way out beside See results, on the same rule as the results popup */
+function syncGoHub(){$('goHub').hidden=!((WEB||window.DG_APP)&&$('go').textContent==='See results')}
+new MutationObserver(syncGoHub).observe($('go'),{childList:true,characterData:true,subtree:true});syncGoHub();
 $('mSm').onclick=$('cvHome').onclick=function(e){e.preventDefault();if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
 $('mPlus').onclick=function(){$('gateH').textContent='smAisle Daily Plus';$('gateBack').hidden=false;only('gate');loadMore()};$('gateBack').onclick=function(){$('gateH').textContent='That was your free train';$('gateBack').hidden=true;mFit();only('menu')};
 $('gateBuy').onclick=function(){if(window.DG_APP)toApp({cmd:'plus'});else location.href='https://smaisle.app/daily/#plus'};

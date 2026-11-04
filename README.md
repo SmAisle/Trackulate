@@ -33,3 +33,6 @@ Same menu as Straight Down Spell: Back to game; a grid of Archive, Stats, How to
 
 ## v1.26 (Nov 4)
 New demo: Try it with a coach, the shared smAisle frame. Three real moves on a tiny practice board, with a finger, a nudge on a wrong tap, and a You're ready popup. It replaces the old walkthrough. Cover link, How to Play and the first-time prompt all open it. `source/demo-frame.js` and `.css` are copies of the shared frame; do not edit them here.
+
+## v1.28 (Nov 4)
+When the game ends, a yellow ‹ smAisle Daily button sits beside See results on the finished board, so one tap always leaves. Shows on the website and in the app, same rule as the results popup.
