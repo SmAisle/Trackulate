@@ -1,5 +1,5 @@
 (function(){
-var VERSION='1.2',VDATE='Nov 4',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
+var VERSION='1.3',VDATE='Nov 4',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -19,8 +19,9 @@ function toApp(m){try{window.webkit&&webkit.messageHandlers&&webkit.messageHandl
 var smAC=null,smAway=false;function getAC(){try{if(!smAC||smAC.state==='closed')smAC=new(window.AudioContext||window.webkitAudioContext)();if(smAC.state!=='running'){var old=smAC;old.resume().catch(function(){});setTimeout(function(){if(smAC===old&&old.state!=='running'&&!document.hidden){try{old.close()}catch(e){}smAC=null}},600)}}catch(e){smAC=null}return smAC}
 function smAwake(){if(smAC&&smAway){try{smAC.close()}catch(e){}smAC=null}smAway=false}
 document.addEventListener('visibilitychange',function(){if(document.hidden)smAway=true});addEventListener('pagehide',function(){smAway=true});addEventListener('pageshow',function(e){if(e.persisted)smAway=true});
-['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
+['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){hornLoad(c);try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
 function soundOn(){return store.get('tr-sound','on')!=='off'}
+/*@HORN*/
 /*@SOUNDS*/
 /*@DRAW*/
 /* the game */

@@ -8,6 +8,8 @@ fl=fl.replace("function step(e,a,n){dg(","function step(e,a,n){if(soundOn())dg("
 snd=between("/* sounds Jeff picked","function hdr()")
 snd=snd.replace("function sf(fn){try{if(sc())fn()}catch(e){}}","function sf(fn){if(!soundOn())return;try{if(sc())fn()}catch(e){}}")
 dr=between("var x,G={wheel:0}","function start(sd)")
-g=open('game.js').read().replace('/*@TRAINS*/',tr).replace('/*@FLIP*/',fl).replace('/*@SOUNDS*/',snd).replace('/*@DRAW*/',dr)
+snd=snd.replace("function whistle(){sf(function(){var c=[220","function whistle(){sf(function(){if(hornPlay(sc(),M,.85))return;var c=[220")
+assert 'hornPlay(sc()' in snd
+g=open('game.js').read().replace('/*@HORN*/',open('horn.js').read().replace('@B64@',open('horn.b64').read()).rstrip()).replace('/*@TRAINS*/',tr).replace('/*@FLIP*/',fl).replace('/*@SOUNDS*/',snd).replace('/*@DRAW*/',dr)
 p=open('page.html').read().replace('/*@GAME*/',g)
 open('../index.html','w').write(p)
