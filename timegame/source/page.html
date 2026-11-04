@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Track Record</title>
+<meta name="description" content="A daily train number game. Set the lever, leave on time, and arrive on the dot.">
+<meta name="theme-color" content="#f4efe1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Track Record">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-180.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800;900&family=Libre+Baskerville:ital@0;1&family=Playfair+Display:wght@900&display=swap">
+<script>/* Set the color set before the page draws (shared smAisle setting). Default is Off. */
+(function(){try{var d=localStorage.getItem('smaisle-dark');if(d==='on'||(d==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.mode='navy'}catch(e){}})();</script>
+<style>
+:root{--paper:#f4efe1;--paper2:#e3dbc4;--card:#fffdf6;--ink:#1a1814;--ink2:#4a453b;--fade:#8c8574;--btn:#1a1814;--btnInk:#f4efe1;--hi:#ffe27a;--hiInk:#1a1814;--red:#b3261e;--ok:#1d7a46;--star:#a67c1a;--gold:#c9a961;--shadow:rgba(0,0,0,.25);--sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--head:"Playfair Display",Georgia,serif;--body:"Libre Baskerville",Georgia,serif;color-scheme:light}
+html[data-mode=navy]{--paper:#121b2e;--paper2:#0d1424;--card:#1c2a44;--ink:#efe6cc;--ink2:#c9b98f;--fade:#8792ab;--btn:#c9a961;--btnInk:#121b2e;--hiInk:#121b2e;--red:#ff8a7a;--ok:#7fd6a3;--star:#d9b56a;--shadow:#05080f;color-scheme:dark}
+*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font:500 16px/1.3 var(--sans)}
+button{font-family:var(--sans);color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+#app{max-width:480px;height:100%;height:100dvh;margin:0 auto;display:flex;flex-direction:column;padding-block:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-bottom,0px) + 12px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:3px double var(--ink);padding-bottom:5px;margin-bottom:10px}
+#pno b{display:block;font:900 22px/1.05 var(--head);font-variant-numeric:lining-nums}#pno small{font:800 10px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.rt{display:flex;gap:6px;align-items:center}.box{border:2px solid var(--ink);border-radius:4px;padding:5px 8px;font:800 12px var(--sans);letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}.box:empty{display:none}
+#menuBtn{width:36px;height:32px;padding:0;border:2px solid var(--ink);border-radius:4px;background:transparent;font-size:17px;line-height:1}
+/* the flip board stays a light island in Navy */
+#board{flex:none;width:max-content;margin:0 auto;border:2px solid #1a1814;border-radius:3px;background:#fffdf6;overflow:hidden}html[data-mode=navy] #board{border-color:var(--gold)}
+.ln{display:flex;border-bottom:1px solid rgba(26,24,20,.25)}.ln:last-child{border-bottom:0}
+.f{position:relative;width:28px;height:40px;background:#fffdf6;color:#1a1814;perspective:160px;font:800 25px/1 var(--sans);text-align:center}
+.f:not(:last-child):before{content:'';position:absolute;top:0;bottom:0;right:0;width:1px;background:rgba(26,24,20,.25);z-index:4}
+.f:after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(26,24,20,.18);z-index:4}
+.f .h{position:absolute;left:0;right:0;height:50%;overflow:hidden;backface-visibility:hidden;background:#fffdf6}.f .t{top:0}.f .b{bottom:0;background:#fffdf6}
+.f .h span{position:absolute;left:0;right:0;height:200%;display:grid;place-items:center;color:#1a1814}.f .t span{top:0}.f .b span{top:-100%}
+.f .ft{z-index:2;transform-origin:50% 100%;animation:sfT 80ms ease-in forwards}.f .fb{z-index:2;transform-origin:50% 0;transform:rotateX(90deg);animation:sfB 80ms ease-out 80ms forwards}
+@keyframes sfT{to{transform:rotateX(-90deg);filter:brightness(.82)}}@keyframes sfB{from{filter:brightness(.88)}to{transform:rotateX(0)}}
+.tix{flex:none;display:flex;align-items:stretch;gap:9px;background:var(--card);border:2px solid var(--ink);border-radius:4px;box-shadow:2px 2px 0 var(--shadow);padding:5px 9px;margin-top:8px}
+.tix .n{display:flex;gap:10px;text-align:center;padding-right:9px;border-right:2px dashed var(--ink);align-items:center}.tix small{display:block;font:800 8px/1.4 var(--sans);letter-spacing:.07em;text-transform:uppercase}.tix b{font:900 20px/1 var(--head);font-variant-numeric:lining-nums}.tix .sr{color:var(--star)}.tix p{margin:0;align-self:center;font:700 13px/1.25 var(--sans)}
+#body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:10px;padding-top:10px}
+.alert{background:#f6c62d;color:#1a1814;border:3px solid #1a1814;box-shadow:3px 3px 0 var(--shadow);border-radius:6px;padding:8px 10px;margin:0 0 2px;text-align:center;animation:alertIn .35s cubic-bezier(.2,1.6,.4,1) .15s both}
+.alert b{display:block;font:900 23px/1.1 var(--sans);text-transform:uppercase;letter-spacing:.03em}.alert span{display:block;font:700 16px/1.25 var(--sans);margin-top:3px}
+@keyframes alertIn{from{transform:scale(.8) rotate(-2deg);opacity:0}to{transform:none;opacity:1}}
+.need{text-align:center;font:800 20px/1.25 var(--sans)}.need small{display:block;font:600 16px var(--sans);color:var(--ink2);margin-top:2px}
+.lev{margin-top:4px}.lev .h{display:flex;justify-content:space-between;align-items:baseline}.lev .h span{font:800 17px var(--sans)}.lev .h b{font:900 31px var(--head);font-variant-numeric:lining-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:46px;background:none;margin:2px 0 0;touch-action:none}
+input[type=range]::-webkit-slider-runnable-track{height:14px;background:var(--paper2);border:2px solid var(--ink);border-radius:7px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:42px;margin-top:-16px;background:var(--btn);border:2px solid var(--gold);border-radius:6px}
+input[type=range]::-moz-range-track{height:10px;background:var(--paper2);border:2px solid var(--ink);border-radius:7px}
+input[type=range]::-moz-range-thumb{width:28px;height:38px;background:var(--btn);border:2px solid var(--gold);border-radius:6px}
+.go{display:block;width:100%;padding:12px;border:2px solid var(--ink);border-radius:3px;background:var(--btn);color:var(--btnInk);font:800 15px var(--sans);text-transform:uppercase;letter-spacing:.08em}html[data-mode=navy] .go{border-color:var(--btn)}
+.go.alt{background:var(--card);color:var(--ink);border-color:var(--ink)}.go.y{background:var(--hi);color:var(--hiInk);border-color:var(--ink);text-transform:none;letter-spacing:.02em}.go.big{flex:none;padding:15px;font-size:18px}
+.clk{text-align:center;font:900 40px/1 var(--head);font-variant-numeric:lining-nums}.mi{text-align:center;font:700 18px var(--sans)}
+#trc{display:block;width:100%;height:74px;margin-top:6px}#trc,#cvArt{border-radius:4px}html[data-mode=navy] #trc,html[data-mode=navy] #cvArt{background:#fbf5e3}
+.res{text-align:center;font:900 32px/1.1 var(--head)}.res.ok{color:var(--ok)}.res.bad{color:var(--red)}.ex{text-align:center;font:600 18px/1.3 var(--sans)}.sg{text-align:center;font-size:30px;line-height:1;color:var(--star);letter-spacing:.06em}
+.rc{background:var(--card);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shadow);border-radius:4px;padding:9px 13px}.rc h3{margin:0;font:italic 900 22px/1.1 var(--head);text-align:center}.rc .sub{text-align:center;font:800 9.5px/1.5 var(--sans);letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);border-bottom:3px double var(--ink);padding-bottom:5px;margin-bottom:5px}
+.rl{display:flex;align-items:baseline;gap:5px;font:700 13px/1.5 var(--sans);text-align:left}.rl i{flex:1;border-bottom:1px dotted var(--fade);transform:translateY(-3px)}.rl span:last-child{color:var(--star);white-space:nowrap}.rl.tot{font:900 19px/1.3 var(--head);border-top:2px dashed var(--ink);margin-top:5px;padding-top:4px}.rl.tot i{border:0}.rl.tot span:last-child{color:inherit}
+.sheet{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:12px 16px;background:rgba(26,24,20,.5);overflow:auto}html[data-mode=navy] .sheet{background:rgba(5,8,15,.75)}
+.card{position:relative;width:100%;max-width:420px;margin:auto;background:var(--paper);border:3px double var(--ink);box-shadow:6px 6px 0 var(--shadow);padding:14px 16px;display:grid;gap:8px}
+.card h2{font:900 26px/1.1 var(--head);margin:0;padding-right:34px;border-bottom:1px solid var(--ink);padding-bottom:6px}
+.x{position:absolute;top:9px;right:9px;width:34px;height:32px;padding:0;background:var(--card);border:2px solid var(--ink);border-radius:4px;font-size:15px}
+.ver{text-align:center;font:500 12px var(--sans);color:var(--fade)}
+.mlinks{display:flex;justify-content:center;gap:10px;font:700 12px var(--sans);flex-wrap:wrap}.mlinks button{background:none;border:0;padding:5px;font:inherit;color:var(--ink2);text-decoration:underline;text-underline-offset:3px}
+.set{display:grid;gap:5px;border-top:1px solid var(--ink);padding-top:8px}.set h3{margin:0;text-align:center;font:800 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}.set small{text-align:center;font-size:11px;color:var(--fade)}
+.seg{display:flex;gap:6px}.seg button{flex:1;padding:9px 4px;border:2px solid var(--ink);border-radius:3px;background:var(--card);font:800 12px var(--sans);text-transform:uppercase}.seg button.sel{background:var(--ink);color:var(--paper)}
+#cover{background:var(--paper);z-index:30}#cover .in{width:100%;max-width:340px;margin:auto;display:grid;gap:12px;text-align:center;justify-items:stretch}
+#coverHub{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:calc(max(0px,(100vw - 480px)/2) + max(16px,env(safe-area-inset-left,0px)));font:800 13px/1.2 var(--sans);letter-spacing:.06em;color:var(--hiInk);background:var(--hi);border:2px solid var(--ink);border-radius:4px;padding:5px 10px;text-decoration:none;white-space:nowrap}#cover.hub{padding-top:calc(env(safe-area-inset-top,0px) + 42px)}
+.ver.smhome{color:var(--ink2)}.smhome a{color:inherit;padding:6px 2px}
+.mh{border-top:3px double var(--ink);border-bottom:3px double var(--ink);padding:8px 0}.mh h1{font:900 clamp(40px,12.5vw,52px)/1 var(--head);margin:0}.mh div{display:flex;justify-content:space-between;font:700 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;margin-top:6px;color:var(--ink2)}
+.tag{font:italic 400 15px/1.45 var(--body);margin:0}#cvArt{display:block;width:100%;height:72px}
+.lk{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 12px;font:800 12px var(--sans);letter-spacing:.06em;text-transform:uppercase}.lk button{background:none;border:0;padding:6px 2px;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--ink);text-decoration:underline}
+#cvStats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}#cvStats div,.statgrid div{display:grid;font:700 10px var(--sans);text-transform:uppercase;color:var(--ink2)}#cvStats b,.statgrid b{font:900 22px var(--head);color:var(--ink);font-variant-numeric:lining-nums}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center}
+.how{margin:0;padding-left:18px;display:grid;gap:7px;font:500 15px/1.35 var(--sans)}
+.past{display:grid;gap:6px;max-height:62vh;overflow:auto}.past button{display:flex;justify-content:space-between;gap:8px;padding:10px;background:var(--card);border:2px solid var(--ink);border-radius:3px;font:700 14px var(--sans);text-align:left}
+.more{display:grid;gap:5px}.more h3{margin:0;font:800 11px var(--sans);text-align:center;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}.moreRow{display:flex;gap:8px;overflow-x:auto;padding:2px}.moreRow a{flex:0 0 60px;font:700 10px/1.15 var(--sans);text-align:center;color:var(--ink);text-decoration:none}.moreRow img{display:block;width:50px;height:50px;margin:0 auto 3px;border:1.5px solid var(--ink);border-radius:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.row2 .go{padding:11px 4px;font-size:13px}.mgrid .go{font-size:12px;white-space:nowrap}
+#demoBlock{position:fixed;inset:0;z-index:24}#demoBar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);transform:translateX(-50%);z-index:25;width:min(calc(100% - 20px),460px);background:var(--card);border:2px solid var(--ink);border-radius:4px;box-shadow:3px 3px 0 var(--shadow);padding:7px 10px;display:grid;grid-template-columns:minmax(0,1fr) 78px;gap:3px 10px;align-items:center}
+.dt{grid-column:1/-1;display:flex;justify-content:space-between;font:800 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}#demoSkip{background:none;border:0;padding:0 0 0 8px;font:inherit;color:inherit;text-decoration:underline}#demoText{margin:0;font:500 14px/1.3 var(--sans);min-height:54px}#demoNext{height:40px;border:2px solid var(--ink);border-radius:3px;background:var(--hi);color:var(--hiInk);font:800 14px var(--sans)}#demoNext:disabled{opacity:.4}
+[hidden]{display:none!important}
+@media (max-height:700px){.f{height:36px}.need{font-size:18px}.go.big{padding:12px}.card{padding:11px 14px;gap:6px}.go{padding:10px}#cover .in{gap:9px}}
+</style>
+</head>
+<body>
+<!-- smAisle fit + zoom guard v1 -->
+<style>
+#smUpright{display:none;position:fixed;inset:0;z-index:2147483000;background:var(--paper,#f4efe1);color:var(--ink,#1a1814);align-items:center;justify-content:center;text-align:center;padding:24px;font:800 15px/1.4 "Libre Franklin","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+#smUpright b{display:block;font:900 44px/1 "Playfair Display",Georgia,serif;letter-spacing:0;margin-bottom:10px}
+@media (orientation:landscape) and (max-height:500px) and (hover:none){#smUpright{display:flex}}
+</style>
+<div id="smUpright" aria-live="polite"><div><b>↻</b>Turn your phone upright to play</div></div>
+<script>['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault()},{passive:false})});document.addEventListener('dblclick',function(e){e.preventDefault()},{passive:false});</script>
+
+<div id="app">
+  <div class="top"><div id="pno"><b id="noLabel"></b><small id="dateLabel"></small></div><div class="rt"><div class="box" id="tn"></div><button id="menuBtn" aria-label="Menu">☰</button></div></div>
+  <div id="board"></div>
+  <div class="tix"><div class="n"><div><small>Stars</small><b class="sr" id="stars"></b></div><div><small>Train</small><b id="tc"></b></div></div><p id="msg"></p></div>
+  <div id="body"></div>
+</div>
+
+<div class="sheet" id="terms" hidden><div class="card"><h2>Track Record</h2>
+  <ul class="how"><li>Track Record is a game, just for fun. No real money, no betting and no prizes.</li><li>It’s provided as is, and it may change or stop working at any time.</li><li>No accounts and no ads. Nothing is sold. Your results stay on your device.</li><li>The website version sends an anonymous check-in so we can count how many devices play. It never includes your name, contacts or location.</li></ul>
+  <button class="go" id="termsGo">Agree and play</button><div class="ver">By tapping Agree and play, you accept these terms.</div></div></div>
+
+<div class="sheet" id="cover" hidden><div class="in">
+  <a id="coverHub" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
+  <div class="mh"><h1>Track Record</h1><div><span id="cvDate"></span><span id="cvNo"></span></div></div>
+  <canvas id="cvArt" aria-hidden="true"></canvas>
+  <p class="tag">Set the lever. Leave on time. Arrive on the dot.</p>
+  <div id="cvStats" hidden></div>
+  <button class="go" id="coverGo">Play today’s trains</button>
+  <div class="lk"><button id="coverPast">Archive</button><button id="coverStats">Stats</button><button id="coverHow">How to Play</button><button id="coverDemo">Demo</button></div>
+  <div class="ver smhome"><a id="cvHome" href="https://smaisle.app/">smAisle Home</a> · <span id="cvVer"></span></div>
+</div></div>
+
+<div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
+  <ol class="how"><li>Five trains a day. The board shows the trip and how far it is.</li><li>Set the <b>lever</b> so your train arrives exactly on time, then tap <b>All Aboard</b>.</li><li>Miles ÷ speed = hours on the rails.</li><li>Later trains add a twist. Watch for the <b>yellow alert</b>.</li><li>Dead on time is <b>3 stars</b>. Within 15 minutes is 2. Within an hour is 1.</li><li>Each train gets <b>2 tries</b>. Your best try counts.</li></ol>
+  <button class="go" id="helpDemo">Watch the demo</button><div class="ver" id="helpVer"></div></div></div>
+
+<div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
+  <button class="go" id="mBack">Back to game</button>
+  <div class="row2 mgrid"><button class="go alt" id="mPast">Archive</button><button class="go alt" id="mStats">Stats</button><button class="go alt" id="mHow" style="grid-column:1/-1">How to Play</button></div>
+  <div class="row2 mgrid"><button class="go alt" id="mFront">Home Screen</button><button class="go y" id="mHub" hidden>‹ smAisle Daily</button></div>
+  <button class="go alt" id="mSet">Settings</button><div class="ver" id="mVer"></div></div></div>
+
+<div class="sheet" id="settings" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Settings</h2>
+  <div class="set"><h3>Sound</h3><div class="seg" id="segSound"><button data-v="on">On</button><button data-v="off">Off</button></div></div>
+  <div class="set"><h3>Dark mode</h3><div class="seg" id="segDark"><button data-v="off">Off</button><button data-v="on">On</button><button data-v="auto">Match phone</button></div><small>On uses Navy. Match phone switches with your phone.</small></div>
+  <div class="mlinks"><button id="mTerms">Terms</button><button id="mSm">See our other games ›</button></div>
+  <button class="go" id="setBack">Back to the menu</button></div></div>
+
+<div class="sheet" id="past" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Archive</h2><div class="past" id="pastList"></div></div></div>
+<div class="sheet" id="stats" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Your Stats</h2><div class="statgrid" id="statgrid"></div><div class="ver" id="sVer"></div></div></div>
+
+<div class="sheet" id="done" hidden><div class="card" style="text-align:center"><button class="x" data-close aria-label="Close">✕</button><h2 id="dTitle"></h2><div class="rc" id="dRc"></div>
+  <div class="row2"><button class="go" id="dShare">Share</button><button class="go y" id="dHub" hidden>‹ smAisle Daily</button></div>
+  <div class="row2"><button class="go alt" id="dPast">Archive</button><button class="go alt" id="dStats">Stats</button></div>
+  <div class="ver" id="dNext"></div>
+  <div class="more" hidden><h3>More smAisle games</h3><div class="moreRow"></div></div></div></div>
+
+<div class="sheet" id="offer" hidden><div class="card" style="text-align:center"><h2 style="padding-right:0">First time here?</h2><p style="margin:0">Want a quick demo?</p><button class="go" id="ofYes">Show me</button><button class="go alt" id="ofNo">Skip</button></div></div>
+
+<div id="demoBlock" hidden></div>
+<div id="demoBar" hidden><div class="dt"><span id="demoStep">Demo</span><button id="demoSkip">Skip</button></div><p id="demoText"></p><button id="demoNext">Next</button></div>
+
+<script>
+/*@GAME*/
+</script>
+</body>
+</html>
