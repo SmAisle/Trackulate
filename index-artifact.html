@@ -149,7 +149,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.17',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.18',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -160,7 +160,7 @@ function dateOf(n){return new Date(Date.parse(EPOCH+'T12:00:00Z')+(n-1)*864e5).t
 function nice(d,o){return new Date(d+'T12:00:00Z').toLocaleDateString('en-US',Object.assign({timeZone:'UTC'},o))}
 var TODAY=todayStr();
 /* Plus: preview in the app without Plus or with ?preview=1. The first train is free. */
-function PREVIEW(){return new URLSearchParams(location.search).get('preview')==='1'&&!(window.DG_APP&&window.DG_APP.plus)||(!!window.DG_APP&&!window.DG_APP.plus)}
+function PREVIEW(){return false}
 function toApp(m){try{window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.dg&&webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
 if(!window.dgNative)window.dgNative=function(cmd,d){if(cmd!=='store'||!window.DG_APP)return;window.DG_APP.plus=!!(d&&d.plus);previewUI();if(!PREVIEW()&&!$('gate').hidden)only('')};
 /* sound: version A of each sound from the soundboard, with the shared sound comeback */
