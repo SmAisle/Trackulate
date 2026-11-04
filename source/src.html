@@ -140,7 +140,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>
 /*PUZZLE*/
 (function(){
-var VERSION='1.22',VDATE='Nov 3',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.23',VDATE='Nov 4',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -159,7 +159,7 @@ var smAC=null,smAway=false,M=null,MC=null;
 function getAC(){try{if(!smAC||smAC.state==='closed')smAC=new(window.AudioContext||window.webkitAudioContext)();if(smAC.state!=='running'){var old=smAC;old.resume().catch(function(){});setTimeout(function(){if(smAC===old&&old.state!=='running'&&!document.hidden){try{old.close()}catch(e){}smAC=null}},600)}}catch(e){smAC=null}return smAC}
 function smAwake(){if(smAC&&smAway){try{smAC.close()}catch(e){}smAC=null}smAway=false}
 document.addEventListener('visibilitychange',function(){if(document.hidden)smAway=true});addEventListener('pagehide',function(){smAway=true});addEventListener('pageshow',function(e){if(e.persisted)smAway=true});
-['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
+['pointerdown','touchend','keydown'].forEach(function(t){document.addEventListener(t,function(){smAwake();var c=getAC();if(c){hornLoad(c);try{var b=c.createBuffer(1,1,22050),s=c.createBufferSource();s.buffer=b;s.connect(c.destination);s.start(0)}catch(e){}}},{capture:true,passive:true})});
 function ctx(){var c=getAC();if(c!==MC){MC=c;NB=null;M=c.createGain();M.gain.value=.9;var k=c.createDynamicsCompressor();M.connect(k);k.connect(c.destination)}return c}
 /*SOUNDLIB*/
 function play(n,v){if(store.get('tk-sound','on')==='off')return;try{SFX[n](v)}catch(e){}}
