@@ -11,5 +11,5 @@ dr=between("var x,G={wheel:0}","function start(sd)")
 snd=snd.replace("function whistle(){sf(function(){var c=[220","function whistle(){sf(function(){if(hornPlay(sc(),M,.85))return;var c=[220")
 assert 'hornPlay(sc()' in snd
 g=open('game.js').read().replace('/*@HORN*/',open('horn.js').read().replace('@B64@',open('horn.b64').read()).rstrip()).replace('/*@TRAINS*/',tr).replace('/*@FLIP*/',fl).replace('/*@SOUNDS*/',snd).replace('/*@DRAW*/',dr)
-p=open('page.html').read().replace('/*@GAME*/',g)
+p=open('page.html').read().replace('/*@GAME*/',g).replace('/*@DEMOJS*/',open('demo-frame.js').read().strip()).replace('/*@DEMOCSS*/',open('demo-frame.css').read().strip())
 open('../index.html','w').write(p)
