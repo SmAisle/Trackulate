@@ -1,5 +1,5 @@
 (function(){
-var VERSION='1.0',VDATE='Nov 3',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
+var VERSION='1.1',VDATE='Nov 4',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -41,13 +41,13 @@ function done(lv,sp,total){busy=false;tries++;var diff=Math.round(lv+total+T.tz-
  if(DEMO){DEMO.done=1;return}
  if($('ag'))$('ag').onclick=setup;$('nx').onclick=function(){tries=0;i++;if(i>=5){if(!store.json(skey(DAY),{}).over)record();fin(true)}else{save();setup()}}}
 function title(t){return t>=13?'Best conductor on the line.':t>=8?'Mostly on schedule.':'The station master wants a word.'}
-function receipt(){var t=sumS();return '<h3>smAisle</h3><div class="sub">Track Record · No. '+dayNo(DAY)+' · '+nd(DAY,{month:'short',day:'numeric'})+'</div>'+TN.map(function(x,k){var s=stars[k]||0;return '<div class="rl"><span>'+nice(x.a)+' to '+nice(x.b)+'</span><i></i><span>'+'★'.repeat(s)+'☆'.repeat(3-s)+'</span></div>'}).join('')+'<div class="rl tot"><span>Total</span><i></i><span>'+t+' of 15</span></div>'}
+function receipt(){var t=sumS();return '<h3>smAisle</h3><div class="sub">CalcRU-Late · No. '+dayNo(DAY)+' · '+nd(DAY,{month:'short',day:'numeric'})+'</div>'+TN.map(function(x,k){var s=stars[k]||0;return '<div class="rl"><span>'+nice(x.a)+' to '+nice(x.b)+'</span><i></i><span>'+'★'.repeat(s)+'☆'.repeat(3-s)+'</span></div>'}).join('')+'<div class="rl tot"><span>Total</span><i></i><span>'+t+' of 15</span></div>'}
 function fin(loud){RID++;busy=false;i=5;if(loud)fanfare();hdr();msg(title(sumS()));board([ln('LAST TRAIN'),ln('ALL IN')]);$('body').innerHTML='<div class="rc">'+receipt()+'</div><button class="go big" id="sr">See results</button>';$('sr').onclick=showDone;if(loud)setTimeout(function(){if(i>=5&&!DEMO)showDone()},1500);else showDone()}
 function showDone(){if(DEMO)return;only('done');loadMore();$('dTitle').textContent=title(sumS());$('dRc').innerHTML=receipt();$('dNext').textContent=PAST?'Archive trains':'New trains at midnight Eastern';$('dHub').hidden=!(WEB||window.DG_APP);$('dShare').style.gridColumn=$('dHub').hidden?'1/-1':''}
 function record(){var t=stars.reduce(function(a,b){return a+(b||0)},0);store.put(skey(DAY),{over:1,i:5,tries:0,stars:stars});var h=store.json('tr-hist',{});if(!h[DAY]){h[DAY]={t:t};if(PAST)h[DAY].late=1;store.put('tr-hist',h)}if(!PAST){markDone();checkIn('done')}}
 function markDone(){try{var s=store.json('smaisle_done',{})||{},d=new Date(),day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');s[day]=s[day]||[];if(s[day].indexOf('tr')<0)s[day].push('tr');var k=Object.keys(s).sort();while(k.length>60)delete s[k.shift()];store.put('smaisle_done',s)}catch(e){}}
 function statsOf(){var h=store.json('tr-hist',{}),V=Object.values(h),n=dayNo(TODAY),run=0,max=0;for(var q=1;q<=n;q++){var r=h[dateOf(q)];if(r&&!r.late){run++;max=Math.max(max,run)}else if(q<n)run=0}var sum=V.reduce(function(a,v){return a+v.t},0);return {played:V.length,avg:V.length?Math.round(sum/V.length*10)/10:0,top:V.reduce(function(a,v){return Math.max(a,v.t)},0),perfect:V.filter(function(v){return v.t===15}).length,cur:run,max:max}}
-function share(){var c=['⬛','🟧','🟨','🟩'];return 'Track Record No. '+dayNo(DAY)+' 🚂\n'+[0,1,2,3,4].map(function(k){return c[stars[k]||0]}).join('')+' '+sumS()+' of 15\n'+URL}
+function share(){var c=['⬛','🟧','🟨','🟩'];return 'CalcRU-Late No. '+dayNo(DAY)+' 🚂\n'+[0,1,2,3,4].map(function(k){return c[stars[k]||0]}).join('')+' '+sumS()+' of 15\n'+URL}
 /* usage check-in. r = total stars for the day. */
 function devId(){var id=store.get('tr-dev','');if(!id){id=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(b){return 'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]}).join('');store.set('tr-dev',id)}return id}
 function inviteCode(){try{var c=localStorage.getItem('smaisle_code');if(c)return String(c).slice(0,40);var m=store.json('smaisle_codes',null);if(m){var v=Object.values(m).find(function(y){return y});if(v)return String(v).slice(0,40)}}catch(e){}return 'unknown'}
@@ -97,7 +97,7 @@ function stopDemo(){if(!DEMO)return;DEMO=null;RID++;busy=false;$('demoBar').hidd
 function startDemo(){stopDemo();closeAll();DEMO={i:-1,done:0};TN=DT;labels();$('demoBar').hidden=false;$('demoBlock').hidden=false;dnext()}
 function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}var s=DS[DEMO.i];$('demoStep').textContent='Demo · '+(DEMO.i+1)+' of '+DS.length;$('demoNext').disabled=true;$('demoNext').textContent=DEMO.i===DS.length-1?'Done':'Next';if(s.r)s.r();var wait=function(){if(!DEMO)return;if(!s.w||s.w()){$('demoText').innerHTML=s.t();$('demoNext').disabled=false}else setTimeout(wait,150)};setTimeout(wait,s.r?400:60)}
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
-['helpVer','sVer'].forEach(function(k){$(k).textContent=VTXT});$('mVer').textContent='Track Record · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
+['helpVer','sVer'].forEach(function(k){$(k).textContent=VTXT});$('mVer').textContent='CalcRU-Late · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
 if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('coverHub').onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}}
 dark();snd();
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
