@@ -5,11 +5,11 @@
 <script>/* one Sound setting for every smAisle game */(function(){try{var s=localStorage.getItem('smaisle-sound');if(s==='on'||s==='off')localStorage.setItem('tk-sound',s)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>Trackulate</title>
+<title>TRACKulate</title>
 <meta name="description" content="A daily number train game. Route the train and reach the station with the exact passenger count.">
 <meta name="theme-color" content="#f4efe1">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Trackulate">
+<meta name="apple-mobile-web-app-title" content="TRACKulate">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@500;700;800&family=Libre+Baskerville:ital@0;1&family=Playfair+Display:wght@900&display=swap">
 <script>/* Set the color set before the page draws (shared smAisle setting). Default is Off. */
 (function(){try{var d=localStorage.getItem('smaisle-dark');if(d==='on'||(d==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.dataset.mode='navy'}catch(e){}})();</script>
@@ -100,13 +100,13 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <button class="go" id="go" type="button">Depart</button>
 </div>
 
-<div class="sheet" id="terms" hidden><div class="card"><h2>Trackulate</h2>
-  <ul class="how"><li>Trackulate is a game, just for fun. No real money, no betting and no prizes.</li><li>It’s provided as is, and it may change or stop working at any time.</li><li>No accounts and no ads. Nothing is sold. Your results stay on your device.</li><li>The website version sends an anonymous check-in so we can count how many devices play. It never includes your name, contacts or location.</li></ul>
+<div class="sheet" id="terms" hidden><div class="card"><h2>TRACKulate</h2>
+  <ul class="how"><li>TRACKulate is a game, just for fun. No real money, no betting and no prizes.</li><li>It’s provided as is, and it may change or stop working at any time.</li><li>No accounts and no ads. Nothing is sold. Your results stay on your device.</li><li>The website version sends an anonymous check-in so we can count how many devices play. It never includes your name, contacts or location.</li></ul>
   <button class="go" id="termsGo">Agree and play</button><div class="ver">By tapping Agree and play, you accept these terms.</div></div></div>
 
 <div class="sheet" id="cover" hidden><div class="in">
   <a id="coverHub" href="https://smaisle.app/daily/" hidden>‹ smAisle Daily</a>
-  <div class="mh"><h1>Trackulate</h1><div><span id="cvDate"></span><span id="cvNo"></span></div></div>
+  <div class="mh"><h1>TRACKulate</h1><div><span id="cvDate"></span><span id="cvNo"></span></div></div>
   <canvas id="cvArt" aria-hidden="true"></canvas>
   <p class="tag">Pick up passengers along the line. The crossing only opens for the exact count.</p>
   <div id="cvStats" hidden></div>
@@ -161,7 +161,7 @@ function makePuzzle(n){var r=rng(Math.imul(n,2654435761)^0x54524B),pick=function
   if(R.length>=30&&G.length){var g=pick(G),e=pick(LAST);p['8,0']=e;p.target=ap(g.v,e);p.sol=g.path;return p}}}
 
 (function(){
-var VERSION='1.26',VDATE='Nov 4',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.27',VDATE='Nov 4',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -273,7 +273,7 @@ function record(win){RUN.over=1;RUN.win=win?1:0;store.put(skey(DAY),RUN);trainBo
 function markDone(){try{var s=store.json('smaisle_done',{})||{},d=new Date(),day=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');s[day]=s[day]||[];if(s[day].indexOf('tk')<0)s[day].push('tk');var k=Object.keys(s).sort();while(k.length>60)delete s[k.shift()];store.put('smaisle_done',s)}catch(e){}}
 function statsOf(){var h=store.json('tk-hist',{}),V=Object.values(h),n=dayNo(TODAY),run=0,max=0;for(var i=1;i<=n;i++){var r=h[dateOf(i)];if(r&&!r.late){run++;max=Math.max(max,run)}else if(i<n)run=0}var W2=V.filter(function(v){return v.w});return {played:V.length,wins:W2.length,first:W2.filter(function(v){return v.n===1}).length,cur:run,max:max}}
 function grid(){var s='';for(var i=0;i<RUN.n-(RUN.win?1:0);i++)s+='💥';return s+(RUN.win?'✅':'')}
-function share(){return 'Trackulate No. '+dayNo(DAY)+' 🚂\n'+grid()+' '+(RUN.win?'Train '+RUN.n+' of '+MAXT:'Derailed')+'\nhttps://smaisle.app/Trackulate/'}
+function share(){return 'TRACKulate No. '+dayNo(DAY)+' 🚂\n'+grid()+' '+(RUN.win?'Train '+RUN.n+' of '+MAXT:'Derailed')+'\nhttps://smaisle.app/Trackulate/'}
 function showDone(){if(!RUN||!RUN.over)return;only('done');loadMore();$('dTitle').textContent=RUN.win?['Right on time!','Close call!','Last train in!'][RUN.n-1]:'Derailed!';$('dBig').textContent=RUN.win?'Train '+RUN.n:'0 for '+MAXT;$('dGrid').textContent=grid();$('dSub').textContent='No. '+dayNo(DAY)+' · Station needed '+p.target+(PAST?' · Archive':'');$('dNext').textContent=PAST?'Archive board':'New board at midnight Eastern';$('dHub').hidden=!(WEB||window.DG_APP);$('dLost').hidden=!!RUN.win;delete $('dRoute').dataset.sure;$('dRoute').textContent='Show the route'}
 /* usage check-in. r = the train that made it (1-3), 0 = derailed all three. */
 function devId(){var id=store.get('tk-dev','');if(!id){id=Array.from(crypto.getRandomValues(new Uint8Array(12)),function(b){return 'abcdefghijklmnopqrstuvwxyz0123456789'[b%36]}).join('');store.set('tk-dev',id)}return id}
@@ -354,10 +354,10 @@ function tkBoard(stage){var el=document.createElement('div'),was=0;el.className=
   bd.innerHTML=o}
  function chain(n){var v=DPZ.start,c=''+v;for(var l=1;l<=Math.min(n+1,3);l++){var o=DPZ[l+','+DRT[l]];v=ap(v,o);c+=' '+lab(o)+'='+v}return c}
  var B={to:function(n){if(n>was)play(n<3?'thrown':'whistle');was=n;draw(n);aboard.textContent=n>=3?DPZ.target:DPZ.start;go.classList.toggle('off',n<2);m.textContent=n>=3?'':chain(n)},tgt:function(n){draw(n);return n<2?bd.querySelector('.st[data-l="'+(n+2)+'"][data-i="'+DRT[n+2]+'"]'):go},win:function(){play('clear');m.innerHTML='<div class="tix"><div class="nums"><div><small>Got</small><b>'+DPZ.target+'</b></div><div><small>Needs</small><b>'+DPZ.target+'</b></div></div><div class="rt2"><b>Exact! Gate up.</b><span class="ch">'+chain(2)+' '+lab(DPZ['4,0'])+'='+DPZ.target+'</span></div></div>'}};return B}
-function startDemo(){store.set('tk-offer','1');smDemo({name:'Trackulate',moves:[{cap:'Your train needs exactly 17. Tap one stop in every row. We picked ×3, so 4 becomes 12. Now tap +4.',nudge:'Follow the finger. +4 makes 16.'},{cap:'Each stop changes the count. −3 makes 13, and the last stop adds 4 for exactly 17. Tap −3.',nudge:'Anything but 17 derails you. Tap −3.'},{cap:'Every row has a stop. Tap Depart to send the train.',nudge:'Tap Depart to send the train.'}],win:'Reach the crossing with the exact count and the gate lifts. Anything else derails you. You get 3 trains.',play:function(){start(TODAY);if(!RUN)checkIn('open')},board:tkBoard})}
+function startDemo(){store.set('tk-offer','1');smDemo({name:'TRACKulate',moves:[{cap:'Your train needs exactly 17. Tap one stop in every row. We picked ×3, so 4 becomes 12. Now tap +4.',nudge:'Follow the finger. +4 makes 16.'},{cap:'Each stop changes the count. −3 makes 13, and the last stop adds 4 for exactly 17. Tap −3.',nudge:'Anything but 17 derails you. Tap −3.'},{cap:'Every row has a stop. Tap Depart to send the train.',nudge:'Tap Depart to send the train.'}],win:'Reach the crossing with the exact count and the gate lifts. Anything else derails you. You get 3 trains.',play:function(){start(TODAY);if(!RUN)checkIn('open')},board:tkBoard})}
 $('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 function previewUI(){var pv=PREVIEW();$('mPlus').hidden=!pv;['coverPast','mPast','dPast'].forEach(function(i){$(i).hidden=pv})}
-['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='Trackulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
+['helpVer','sVer'].forEach(function(i){$(i).textContent=VTXT});$('mVer').textContent='TRACKulate · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
 if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('coverHub').onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}}
 dark();snd();previewUI();setup(TODAY);size();requestAnimationFrame(loop);
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
