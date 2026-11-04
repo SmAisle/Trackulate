@@ -30,3 +30,6 @@ The yellow ‹ smAisle Daily button shows on the cover only, never during play. 
 
 ## v1.15 (Nov 3)
 Same menu as Straight Down Spell: Back to game; a grid of Archive, Stats, How to Play, plus a Plus row that shows only without Plus and opens the Plus offer; Home Screen beside the yellow smAisle Daily; Settings; the version. The demo is in How to Play.
+
+## v1.26 (Nov 4)
+New demo: Try it with a coach, the shared smAisle frame. Three real moves on a tiny practice board, with a finger, a nudge on a wrong tap, and a You're ready popup. It replaces the old walkthrough. Cover link, How to Play and the first-time prompt all open it. `source/demo-frame.js` and `.css` are copies of the shared frame; do not edit them here.
