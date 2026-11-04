@@ -1,5 +1,5 @@
 (function(){
-var VERSION='1.1',VDATE='Nov 4',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
+var VERSION='1.2',VDATE='Nov 4',GAME='tr',TERMS='tr-terms',EPOCH='2026-11-03',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79',URL='https://smaisle.app/Trackulate/timegame/';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -9,6 +9,9 @@ function dayNo(d){return Math.round((Date.parse(d+'T12:00:00Z')-Date.parse(EPOCH
 function dateOf(n){return new Date(Date.parse(EPOCH+'T12:00:00Z')+(n-1)*864e5).toISOString().slice(0,10)}
 function nd(d,o){return new Date(d+'T12:00:00Z').toLocaleDateString('en-US',Object.assign({timeZone:'UTC'},o))}
 var TODAY=todayStr();
+/* Plus game: the preview is the first train. The hub adds ?preview=1 for anyone without Plus. */
+function isPV(){return new URLSearchParams(location.search).get('preview')==='1'&&!(window.DG_APP&&window.DG_APP.plus)||(!!window.DG_APP&&!window.DG_APP.plus)}
+if(!window.dgNative)window.dgNative=function(cmd,d){if(cmd!=='store'||!window.DG_APP)return;window.DG_APP.plus=!!(d&&d.plus);previewUI();if(!isPV()&&!$('gate').hidden)only('')};
 function toApp(m){try{window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.dg&&webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
 /*@TRAINS*/
 /*@FLIP*/
@@ -39,7 +42,7 @@ function done(lv,sp,total){busy=false;tries++;var diff=Math.round(lv+total+T.tz-
  if(!DEMO){if(last&&i>=4)record();else if(last)store.put(skey(DAY),{i:i+1,tries:0,stars:stars});else save()}
  $('body').innerHTML='<div class="res '+(a?'bad':'ok')+'">'+(a?dur(a)+' '+(diff<0?'early':'late'):'Right on time!')+'</div>'+starLine+'<div class="ex">'+ex+'</div>'+(DEMO?'':(last?'':'<button class="go alt" id="ag">Try again</button>')+'<button class="go big" id="nx">'+lb+'</button>');if(a)miss();else win();
  if(DEMO){DEMO.done=1;return}
- if($('ag'))$('ag').onclick=setup;$('nx').onclick=function(){tries=0;i++;if(i>=5){if(!store.json(skey(DAY),{}).over)record();fin(true)}else{save();setup()}}}
+ if($('ag'))$('ag').onclick=setup;$('nx').onclick=function(){if(isPV()&&i===0){tries=0;i=1;save();gate();return}tries=0;i++;if(i>=5){if(!store.json(skey(DAY),{}).over)record();fin(true)}else{save();setup()}}}
 function title(t){return t>=13?'Best conductor on the line.':t>=8?'Mostly on schedule.':'The station master wants a word.'}
 function receipt(){var t=sumS();return '<h3>smAisle</h3><div class="sub">CalcRU-Late · No. '+dayNo(DAY)+' · '+nd(DAY,{month:'short',day:'numeric'})+'</div>'+TN.map(function(x,k){var s=stars[k]||0;return '<div class="rl"><span>'+nice(x.a)+' to '+nice(x.b)+'</span><i></i><span>'+'★'.repeat(s)+'☆'.repeat(3-s)+'</span></div>'}).join('')+'<div class="rl tot"><span>Total</span><i></i><span>'+t+' of 15</span></div>'}
 function fin(loud){RID++;busy=false;i=5;if(loud)fanfare();hdr();msg(title(sumS()));board([ln('LAST TRAIN'),ln('ALL IN')]);$('body').innerHTML='<div class="rc">'+receipt()+'</div><button class="go big" id="sr">See results</button>';$('sr').onclick=showDone;if(loud)setTimeout(function(){if(i>=5&&!DEMO)showDone()},1500);else showDone()}
@@ -63,7 +66,9 @@ function closeAll(){only('')}
 document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){b.closest('.sheet').hidden=true;if(back==='cover')cover()}});
 function art(){scene($('cvArt'),.45,0)}
 function cover(){stopDemo();RID++;busy=false;TODAY=todayStr();only('cover');var r=store.json(skey(TODAY),null);$('cvDate').textContent=nd(TODAY,{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('cvNo').textContent='No. '+dayNo(TODAY);$('coverGo').textContent=r&&r.over?'See today’s results':r?'Keep playing':'Play today’s trains';var s=statsOf();$('cvStats').hidden=!s.played;if(s.played)$('cvStats').innerHTML=[[s.played,'Played'],[s.avg,'Average'],[s.cur,'Streak'],[s.top,'Best']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');art()}
-function openDay(d){stopDemo();TODAY=todayStr();DAY=d;PAST=d!==TODAY;TN=makeTrains(dayNo(d));var R=store.json(skey(d),null);i=R?R.i:0;tries=R?R.tries:0;stars=R?R.stars:[];closeAll();labels();if(R&&R.over)fin(false);else setup()}
+function openDay(d){stopDemo();TODAY=todayStr();DAY=d;PAST=d!==TODAY;TN=makeTrains(dayNo(d));var R=store.json(skey(d),null);i=R?R.i:0;tries=R?R.tries:0;stars=R?R.stars:[];closeAll();labels();if(R&&R.over)fin(false);else if(isPV()&&i>=1)gate();else setup()}
+function gate(){$('gateH').textContent='That was your free train';$('gateBack').hidden=true;only('gate');loadMore()}
+function previewUI(){var pv=isPV();$('mPlus').hidden=!pv;$('mHow').style.gridColumn=pv?'':'1/-1';['coverPast','mPast','dPast'].forEach(function(k){$(k).hidden=pv})}
 $('coverGo').onclick=function(){if(!store.get('tr-offer','')&&!store.json(skey(TODAY),null)){store.set('tr-offer','1');only('offer');return}openDay(TODAY)};$('ofYes').onclick=startDemo;$('ofNo').onclick=function(){openDay(TODAY)};
 $('coverHow').onclick=$('mHow').onclick=function(){only('help')};
 function arch(){var h=store.json('tr-hist',{}),n=dayNo(TODAY),o='';for(var q=n;q>=1;q--){var d=dateOf(q),r=h[d],k=store.json(skey(d),null);o+='<button data-d="'+d+'"><span>No. '+q+' · '+nd(d,{month:'short',day:'numeric'})+(q===n?' · Today':'')+'</span><span>'+(r?r.t+' of 15'+(r.late?' · late':''):k?'Keep playing':'Play')+'</span></button>'}$('pastList').innerHTML=o;$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){openDay(b.dataset.d)}});only('past')}
@@ -72,7 +77,9 @@ function stats(){var s=statsOf();$('statgrid').innerHTML=[[s.played,'Played'],[s
 $('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
 $('menuBtn').onclick=function(){if(DEMO)return;only('menu')};$('mBack').onclick=closeAll;$('mSet').onclick=function(){only('settings')};$('setBack').onclick=function(){only('menu')};$('mFront').onclick=cover;$('mTerms').onclick=function(){only('terms')};
 function goHub(){if(window.DG_APP)return toApp({cmd:'home'});location.href='https://smaisle.app/daily/'}
-$('mHub').onclick=$('dHub').onclick=goHub;
+$('mHub').onclick=$('dHub').onclick=$('gateHub').onclick=goHub;
+$('mPlus').onclick=function(){$('gateH').textContent='smAisle Daily Plus';$('gateBack').hidden=false;only('gate');loadMore()};$('gateBack').onclick=function(){only('menu')};
+$('gateBuy').onclick=function(){if(window.DG_APP)toApp({cmd:'plus'});else location.href='https://smaisle.app/daily/#plus'};
 $('mSm').onclick=$('cvHome').onclick=function(e){e.preventDefault();if(window.DG_APP)return toApp({cmd:'home'});if(WEB)location.href='https://smaisle.app/';else window.open('https://smaisle.app/','_blank','noopener')};
 $('dShare').onclick=function(){var t=share(),b=$('dShare');try{if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({text:t}).catch(function(){});return}}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Share'},1500)},function(){})};
 $('termsGo').onclick=function(){var first=!store.get(TERMS,'');store.set(TERMS,TODAY);if(first)checkIn('open');cover()};
@@ -99,7 +106,7 @@ function dnext(){if(!DEMO)return;DEMO.i++;if(DEMO.i>=DS.length){cover();return}v
 $('demoNext').onclick=dnext;$('demoSkip').onclick=cover;$('coverDemo').onclick=$('helpDemo').onclick=startDemo;
 ['helpVer','sVer'].forEach(function(k){$(k).textContent=VTXT});$('mVer').textContent='CalcRU-Late · '+VTXT+' · smAisle';$('cvVer').textContent=VTXT;
 if(WEB||window.DG_APP){$('coverHub').hidden=false;$('cover').classList.add('hub');$('mHub').hidden=false;$('coverHub').onclick=function(e){if(window.DG_APP){e.preventDefault();toApp({cmd:'home'})}}}
-dark();snd();
+dark();snd();previewUI();
 if(store.get(TERMS,'')){cover();checkIn('open')}else only('terms');
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(!$('cover').hidden)art()});
 window.__tr=function(){return {TN:TN,T:T,i:i,tries:tries,stars:stars,DEMO:DEMO,run:run,share:share,DAY:DAY,make:makeTrains}};
