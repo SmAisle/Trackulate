@@ -36,3 +36,6 @@ New demo: Try it with a coach, the shared smAisle frame. Three real moves on a t
 
 ## v1.28 (Nov 4)
 When the game ends, a yellow ‹ smAisle Daily button sits beside See results on the finished board, so one tap always leaves. Shows on the website and in the app, same rule as the results popup.
+
+## v1.29 (Nov 6)
+Change your route before Depart: tap any stop in a filled row and the route redraws around it, or tap a chosen stop to take it and the stops below it back off.
