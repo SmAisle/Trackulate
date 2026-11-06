@@ -70,6 +70,8 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 [hidden]{display:none!important}
 @media (max-height:700px){#cover .in{gap:9px}#cvArt{height:92px}.card{padding:12px 14px;gap:6px}.go{padding:10px}}
 .go:disabled{opacity:.4}
+/* Noon board row on the cover (app only) */
+.noon{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;padding:10px 12px;border:2px solid var(--ink);border-radius:3px;background:var(--card);color:var(--ink);font:800 14px var(--sans);text-align:left}.noon #cnR{font:800 12px var(--sans);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}.noon.wait{border-style:dashed;color:var(--ink2)}.noon.wait #cnR{text-transform:none;letter-spacing:0;font-weight:700}.noon.lock #cnR{background:var(--hi);color:var(--hiInk);border:1.5px solid var(--ink);border-radius:3px;padding:2px 7px}
 #goRow{display:flex;gap:8px}#goRow .go{flex:1 1 0;min-width:0}#goHub{padding-left:4px;padding-right:4px;font-size:14px;white-space:nowrap}
 </style>
 </head>
@@ -102,12 +104,13 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <p class="tag">Pick up passengers along the line. The crossing only opens for the exact count.</p>
   <div id="cvStats" hidden></div>
   <button class="go" id="coverGo">Play today’s board</button>
+  <button class="noon" id="coverNoon" type="button" hidden><span id="cnL">Noon board</span><span id="cnR"></span></button>
   <div class="lk"><button id="coverPast">Archive</button><button id="coverStats">Stats</button><button id="coverHow">How to Play</button><button id="coverDemo">Try the demo</button></div>
   <div class="ver smhome"><a id="cvHome" href="https://smaisle.app/">smAisle Home</a> · <span id="cvVer"></span></div>
 </div></div>
 
 <div class="sheet" id="help" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>How to Play</h2>
-  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap one stop in every row to build a <b>route</b>. Each stop changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b> for your score. Everyone gets the same board each day.</li></ol>
+  <ol class="how"><li>Your train starts with a few <b>passengers</b>.</li><li>Tap one stop in every row to build a <b>route</b>. Each stop changes the count.</li><li>Every route ends at the same last stop, then a <b>crossing</b>.</li><li>Arrive with the <b>exact count</b> and the gate lifts. Anything else derails you.</li><li>You get <b>3 trains</b> for your score. Everyone gets the same board each day.</li><li id="howNoon" hidden>With Plus, a second <b>Noon board</b> opens at noon each day.</li></ol>
   <button class="go" id="helpDemo">Try the demo</button><div class="ver" id="helpVer"></div></div></div>
 
 <div class="sheet" id="menu" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Menu</h2>
@@ -122,7 +125,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
   <div class="mlinks"><button id="mTerms">Terms</button><button id="mSm">See our other games ›</button></div>
   <button class="go" id="setBack">Back to the menu</button></div></div>
 
-<div class="sheet" id="past" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Archive</h2><div class="past" id="pastList"></div></div></div>
+<div class="sheet" id="past" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Archive</h2><div class="seg" id="archTab" hidden><button data-t="m">Daily board</button><button data-t="n">Noon board</button></div><div class="past" id="pastList"></div></div></div>
 <div class="sheet" id="stats" hidden><div class="card"><button class="x" data-close aria-label="Close">✕</button><h2>Your Stats</h2><div class="statgrid" id="statgrid"></div><div class="ver" id="sVer"></div></div></div>
 
 <div class="sheet" id="done" hidden><div class="card" style="text-align:center"><h2 id="dTitle" style="padding-right:0"></h2><div class="big" id="dBig"></div><div class="dgrid" id="dGrid"></div><div id="dSub"></div>
@@ -140,7 +143,7 @@ html[data-mode=navy] .go{border-color:var(--btn)}
 <script>
 /*PUZZLE*/
 (function(){
-var VERSION='1.29',VDATE='Nov 6',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
+var VERSION='1.30',VDATE='Nov 6',GAME='tk',TERMS='tk-terms',EPOCH='2026-11-02',FB_KEY='AIzaSyAlbSCTpAiK-1tojkyWrY3QuJsSzILHSfs',FB_PROJ='aislerun-88e79';
 var VTXT='v'+VERSION+' · '+VDATE,$=function(i){return document.getElementById(i)};
 var WEB=/github\.io$|smaisle\.app$/.test(location.hostname);
 var store={get:function(k,d){try{var v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},json:function(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v===null?d:v}catch(e){return d}},put:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -153,7 +156,7 @@ var TODAY=todayStr();
 /* Plus: preview in the app without Plus or with ?preview=1. The first train is free. */
 function PREVIEW(){return false}
 function toApp(m){try{window.webkit&&webkit.messageHandlers&&webkit.messageHandlers.dg&&webkit.messageHandlers.dg.postMessage(m)}catch(e){}}
-if(!window.dgNative)window.dgNative=function(cmd,d){if(cmd!=='store'||!window.DG_APP)return;window.DG_APP.plus=!!(d&&d.plus);previewUI();if(!PREVIEW()&&!$('gate').hidden)only('')};
+if(!window.dgNative)window.dgNative=function(cmd,d){if(cmd!=='store'||!window.DG_APP)return;window.DG_APP.plus=!!(d&&d.plus);previewUI();noonRow();if(!PREVIEW()&&!$('gate').hidden)only('')};
 /* sound: version A of each sound from the soundboard, with the shared sound comeback */
 var smAC=null,smAway=false,M=null,MC=null;
 function getAC(){try{if(!smAC||smAC.state==='closed')smAC=new(window.AudioContext||window.webkitAudioContext)();if(smAC.state!=='running'){var old=smAC;old.resume().catch(function(){});setTimeout(function(){if(smAC===old&&old.state!=='running'&&!document.hidden){try{old.close()}catch(e){}smAC=null}},600)}}catch(e){smAC=null}return smAC}
@@ -168,12 +171,24 @@ function play(n,v){if(store.get('tk-sound','on')==='off')return;try{SFX[n](v)}ca
 var back=null;function only(id){if(id&&id!=='cover'&&!$('cover').hidden)back='cover';if(!id||id==='cover')back=null;document.querySelectorAll('.sheet').forEach(function(s){s.hidden=s.id!==id})}
 function closeAll(){only('')}
 document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){b.closest('.sheet').hidden=true;if(back==='cover')cover()}});
-function cover(){only('cover');var r=store.json(skey(TODAY),null);$('cvDate').textContent=nice(TODAY,{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('cvNo').textContent='Board No. '+dayNo(TODAY);$('coverGo').textContent=r?'See today’s results':'Play today’s board';var s=statsOf();$('cvStats').hidden=!s.played;if(s.played)$('cvStats').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.cur,'Streak'],[s.max,'Best']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');art()}
-function start(d){TODAY=todayStr();closeAll();size();setup(d);frame();if(RUN&&RUN.over)setTimeout(showDone,200)}
-$('coverGo').onclick=function(){if(!store.get('tk-offer','')&&!store.json(skey(TODAY),null)){store.set('tk-offer','1');only('offer');return}start(TODAY);if(!RUN)checkIn('open')};$('ofYes').onclick=function(){cover();startDemo()};$('ofNo').onclick=function(){start(TODAY);if(!RUN)checkIn('open')};
+function cover(){only('cover');var r=store.json(skey(TODAY,false),null);$('cvDate').textContent=nice(TODAY,{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('cvNo').textContent='Board No. '+dayNo(TODAY);$('coverGo').textContent=r?'See today’s results':'Play today’s board';var s=statsOf();$('cvStats').hidden=!s.played;if(s.played)$('cvStats').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.cur,'Streak'],[s.max,'Best']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');noonRow();art()}
+function start(d,noon){TODAY=todayStr();closeAll();size();setup(d,noon);frame();if(RUN&&RUN.over)setTimeout(showDone,200)}
+$('coverGo').onclick=function(){if(!store.get('tk-offer','')&&!store.json(skey(TODAY,false),null)){store.set('tk-offer','1');only('offer');return}start(TODAY);if(!RUN)checkIn('open')};$('ofYes').onclick=function(){cover();startDemo()};$('ofNo').onclick=function(){start(TODAY);if(!RUN)checkIn('open')};
 $('coverHow').onclick=$('mHow').onclick=function(){only('help')};
-function arch(){var h=store.json('tk-hist',{}),n=dayNo(TODAY),o='';for(var i=n;i>=1;i--){var d=dateOf(i),r=h[d];o+='<button data-d="'+d+'"><span>No. '+i+' · '+nice(d,{month:'short',day:'numeric'})+(i===n?' · Today':'')+'</span><span>'+(r?(r.w?'Train '+r.n:'Derailed')+(r.late?' · late':''):'Play')+'</span></button>'}$('pastList').innerHTML=o;$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){start(b.dataset.d)}});only('past')}
-$('coverPast').onclick=$('mPast').onclick=$('dPast').onclick=arch;
+function arch(t){var nk=noonPlus()&&t==='n';$('archTab').hidden=!noonPlus();document.querySelectorAll('#archTab button').forEach(function(b){b.classList.toggle('sel',(b.dataset.t==='n')===nk)});if(nk)return archNoon();var h=store.json('tk-hist',{}),n=dayNo(TODAY),o='';for(var i=n;i>=1;i--){var d=dateOf(i),r=h[d];o+='<button data-d="'+d+'"><span>No. '+i+' · '+nice(d,{month:'short',day:'numeric'})+(i===n?' · Today':'')+'</span><span>'+(r?(r.w?'Train '+r.n:'Derailed')+(r.late?' · late':''):'Play')+'</span></button>'}$('pastList').innerHTML=o;$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){start(b.dataset.d)}});only('past')}
+function archNoon(){var h=store.json('tk-nhist',{}),n=dayNo(TODAY),o='';for(var i=n;i>=1;i--){var d=dateOf(i),r=h[d];if(!noonOpen(d))continue;o+='<button data-d="'+d+'"><span>No. '+i+' Noon · '+nice(d,{month:'short',day:'numeric'})+(i===n?' · Today':'')+'</span><span>'+(r?(r.w?'Train '+r.n:'Derailed')+(r.late?' · late':''):'Play')+'</span></button>'}$('pastList').innerHTML=o||'<p class="ver">The first noon board opens at noon.</p>';$('pastList').querySelectorAll('button').forEach(function(b){b.onclick=function(){start(b.dataset.d,true)}});only('past')}
+$('coverPast').onclick=function(){arch('m')};$('mPast').onclick=$('dPast').onclick=function(){arch(NOON?'n':'m')};
+/* Noon board: smAisle Daily app only, Plus only. Opens 11:59 AM Eastern on its day. */
+var NOON_AT=11*3600+59*60;
+function noonPlus(){return !!(window.SMD_APP&&window.DG_APP&&window.DG_APP.plus)}
+function etSec(){var o={};new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'numeric',second:'numeric',hourCycle:'h23'}).formatToParts(new Date()).forEach(function(q){o[q.type]=q.value});return (+o.hour%24)*3600+(+o.minute)*60+(+o.second)}
+function noonOpen(d){var t=todayStr();return d<t||(d===t&&etSec()>=NOON_AT)}
+function noonLeft(){var s=Math.max(0,NOON_AT-etSec()),h=Math.floor(s/3600),m=Math.ceil(s%3600/60);if(m===60){h++;m=0}return s<60?'in under a minute':'in '+(h?h+'h ':'')+(m||!h?m+'m':'').trim()}
+function noonRow(){var b=$('coverNoon');if(!b)return;if(!window.SMD_APP){b.hidden=true;return}var d=todayStr(),pl=noonPlus(),op=noonOpen(d),r=store.json(skey(d,true),null);b.hidden=false;b.className='noon'+(!pl?' lock':!op?' wait':'');
+ $('cnL').textContent=pl&&!op?'Noon board opens at noon':'Noon board';$('cnR').textContent=!pl?'🔒 Plus':!op?noonLeft():r&&r.over?(r.win?'Train '+r.n+' ✓':'Derailed'):r&&r.n?'Keep playing':'Play'}
+$('coverNoon').onclick=function(){var d=todayStr();if(!noonPlus())return toApp({cmd:'plus'});if(!noonOpen(d))return noonRow();start(d,true)};
+if(window.SMD_APP){$('howNoon').hidden=false;setInterval(function(){if(!$('cover').hidden)noonRow()},15000)}
+document.querySelectorAll('#archTab button').forEach(function(b){b.onclick=function(){arch(b.dataset.t)}});
 function stats(){var s=statsOf();$('statgrid').innerHTML=[[s.played,'Played'],[s.wins,'Exact'],[s.played?Math.round(s.wins/s.played*100)+'%':'–','Exact %'],[s.cur,'Streak'],[s.max,'Best streak'],[s.first,'First train']].map(function(p){return '<div><b>'+p[0]+'</b>'+p[1]+'</div>'}).join('');only('stats')}
 $('coverStats').onclick=$('mStats').onclick=$('dStats').onclick=stats;
 function mFit(){[].forEach.call(document.querySelectorAll('#menu .mgrid'),function(g){var v=[].filter.call(g.children,function(x){return !x.hidden});g.hidden=!v.length;v.forEach(function(x,i){x.style.gridColumn=v.length%2&&i===v.length-1?'1/-1':''})})}

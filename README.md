@@ -39,3 +39,6 @@ When the game ends, a yellow ‹ smAisle Daily button sits beside See results on
 
 ## v1.29 (Nov 6)
 Change your route before Depart: tap any stop in a filled row and the route redraws around it, or tap a chosen stop to take it and the stops below it back off.
+
+## v1.30 (Nov 6)
+Noon board, in the smAisle Daily app only (needs `window.SMD_APP`), for Plus members. A second board each day opens at noon Eastern (11:59 AM). The cover shows a Noon board row under Play today's board: Play, Keep playing or the result with Plus; "Noon board opens at noon" with a countdown before then; a locked Plus row without Plus (tapping it posts `{cmd:'plus'}` to the app). Same generator as the daily board, seeded `makePuzzle(dayNo + NOON_OFF)` with `NOON_OFF = 500000`, so it is the same for everyone and never repeats a daily board; `puzzcheck.js` now checks 1,100 noon boards too. Its own saves: `tk-n_<date>` (progress) and `tk-nhist` (results, own noon streak). It never writes `tk-d_`, `tk-hist`, Stats, the main streak, `smaisle_done`, `tk-usage` or check-ins. Archive gets Daily board / Noon board tabs for Plus in the app, with every past noon board. Results and share say Noon. The website is unchanged apart from the version.
